@@ -65,6 +65,8 @@
 #include <ti/demo/utils/mmwdemo_adcconfig.h>
 #include <ti/demo/utils/mmwdemo_rfparser.h>
 
+#include "../out_of_box_1843_dss/custom_type_defs.h"
+
 /**************************************************************************
  *************************** Local function prototype****************************
  **************************************************************************/
@@ -1359,7 +1361,7 @@ static int32_t MmwDemo_CLISetAngle (int32_t argc, char* argv[])
  */
 static int32_t MmwDemo_CLIDBScanCfg (int32_t argc, char* argv[])
 {
-    DPU_AoAProc_MultiObjBeamFormingCfg cfg;
+    DPU_dbScanCfg cfg;
     int8_t              subFrameNum;
 
     if(MmwDemo_CLIGetSubframe(argc, argv, 4, &subFrameNum) < 0)
@@ -1373,23 +1375,11 @@ static int32_t MmwDemo_CLIDBScanCfg (int32_t argc, char* argv[])
     /* Populate configuration: */
     cfg.enabled                     = (uint8_t) atoi (argv[2]);
     cfg.epsilon                     = (float) atof (argv[3]);
-    cfg.min_points                  = (float) atof (argv[4]);
+    cfg.min_points                  = (uint8_t) atof (argv[4]);
 
-    /* Save Configuration to use later */
-    MmwDemo_CfgUpdate((void *)&cfg, MMWDEMO_MULTIOBJBEAMFORMING_OFFSET,
-                      sizeof(cfg), subFrameNum);
-
-    return 0;
-
-
-
-    float enabled, epsilon, min_points;
-
-    /* Populate configuration: */
-    enabled                = (float) atof (argv[1]);
-    epsilon                = (float) atof (argv[2]);
-    min_points             = (float) atof (argv[3]);
-
+    // /* Save Configuration to use later */
+    // MmwDemo_CfgUpdate((void *)&cfg, MMWDEMO_MULTIOBJBEAMFORMING_OFFSET,
+    //                   sizeof(cfg), subFrameNum);
 
     CLI_write("dbScan clustering has been configured\n");
 
