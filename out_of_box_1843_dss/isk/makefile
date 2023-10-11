@@ -12,6 +12,7 @@ GEN_CMDS__FLAG := -l"configPkg/linker.cmd"
 ORDERED_OBJS += \
 "./antenna_geometry.oe674" \
 "./data_path.oe674" \
+"./dbscan.oe674" \
 "./dss_main.oe674" \
 "./objectdetection.oe674" \
 "../c674x_linker.cmd" \
@@ -168,8 +169,8 @@ out_of_box_1843_dss_isk.xe674: $(OBJS) $(CMD_SRCS) $(GEN_CMDS)
 # Other Targets
 clean:
 	-$(RM) $(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "antenna_geometry.oe674" "data_path.oe674" "dss_main.oe674" "objectdetection.oe674" 
-	-$(RM) "antenna_geometry.d" "data_path.d" "dss_main.d" "objectdetection.d" 
+	-$(RM) "antenna_geometry.oe674" "data_path.oe674" "dbscan.oe674" "dss_main.oe674" "objectdetection.oe674" 
+	-$(RM) "antenna_geometry.d" "data_path.d" "dbscan.d" "dss_main.d" "objectdetection.d" 
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'
 	-@echo ' '

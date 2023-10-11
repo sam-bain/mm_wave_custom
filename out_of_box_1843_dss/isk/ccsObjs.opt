@@ -1,5 +1,6 @@
 "./antenna_geometry.oe674"
 "./data_path.oe674"
+"./dbscan.oe674"
 "./dss_main.oe674"
 "./objectdetection.oe674"
 "../c674x_linker.cmd"

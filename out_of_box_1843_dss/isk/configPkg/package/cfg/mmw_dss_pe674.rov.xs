@@ -5044,7 +5044,7 @@ __o = __obj[394]  // ti.sysbios.heaps.HeapMem.Instance#0
     __o['instance'] = __obj[395.0]
     __o['minBlockAlign'] = 0
     __o['sectionName'] = String(java.net.URLDecoder.decode('systemHeap', 'UTF-8'))
-    __o['size'] = 32768
+    __o['size'] = 24576
     __o['usePrimaryHeap'] = false
 
 __o = __obj[395]  // ti.sysbios.heaps.HeapMem.Instance#0/instance
@@ -18430,7 +18430,7 @@ __o = __obj[1100]  // ti.sysbios.knl.Task
     __o['enableIdleTask'] = true
     __o['hooks'] = __obj[1160.0]
     __o['idleTaskStackSection'] = String(java.net.URLDecoder.decode('.far%3AtaskStackSection', 'UTF-8'))
-    __o['idleTaskStackSize'] = 800
+    __o['idleTaskStackSize'] = 600
     __o['idleTaskVitalTaskFlag'] = true
     __o['initStackFlag'] = true
     __o['minimizeLatency'] = false
@@ -18468,7 +18468,7 @@ __o = __obj[1102]  // ti.sysbios.knl.Task.Instance#0
     __o['stack'] = null
     __o['stackHeap'] = null
     __o['stackSection'] = String(java.net.URLDecoder.decode('.far%3AtaskStackSection', 'UTF-8'))
-    __o['stackSize'] = 800
+    __o['stackSize'] = 600
     __o['vitalTaskFlag'] = true
 
 __o = __obj[1103]  // ti.sysbios.knl.Task.Instance#0/instance

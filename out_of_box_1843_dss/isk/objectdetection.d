@@ -48,8 +48,9 @@ objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/board/antenna_geometry.h
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/board/antenna_geometry.h
-objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/alg/mmwavelib/src/detection/mmwavelib_clustering.h
-objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/alg/mmwavelib/include/mmwavelib_cplx_types.h
+objectdetection.oe674: ../dbscan.h
+objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/limits.h
+objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/aoaproc/aoaprochwa.h
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/hwa.h
@@ -338,9 +339,11 @@ C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/board/antenna_geometry.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/alg/mmwavelib/src/detection/mmwavelib_clustering.h:
+../dbscan.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/alg/mmwavelib/include/mmwavelib_cplx_types.h:
+C:/ti/ti-cgt-c6000_8.3.3/include/limits.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/aoaproc/aoaprochwa.h:
 

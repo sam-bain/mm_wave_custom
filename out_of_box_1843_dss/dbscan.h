@@ -5,17 +5,18 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 typedef struct point_s point_t;
 struct point_s {
-    double x, y, z;
-    int cluster_id;
+    float x, y, z;
+    int8_t cluster_id;
 };
 
 void dbscan(
     point_t *points,
-    unsigned int num_points,
-    double epsilon,
-    unsigned int minpts);
+    uint8_t num_points,
+    float epsilon,
+    uint8_t minpts);
 
 #endif /*DBSCAN_H*/

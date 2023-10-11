@@ -58,6 +58,8 @@
 #include <ti/control/dpm/dpm.h>
 #include <ti/board/antenna_geometry.h>
 
+#include "dbscan.h"
+
 #if defined(USE_2D_AOA_DPU)
 #include <ti/datapath/dpc/dpu/aoa2dproc/aoa2dprochwa.h>
 #else
@@ -195,6 +197,8 @@ ObjDetObj     *gObjDetObj;
 #define DPC_USE_SYMMETRIC_WINDOW_DOPPLER_DPU
 #define DPC_DPU_RANGEPROC_FFT_WINDOW_TYPE            MATHUTILS_WIN_BLACKMAN
 #define DPC_DPU_DOPPLERPROC_FFT_WINDOW_TYPE          MATHUTILS_WIN_HANNING
+
+#define MAX_OBJ_OUT 50
 
 /**************************************************************************
  ************************** Local Functions *******************************
@@ -816,62 +820,62 @@ static void DPC_ObjDet_GetAntGeometryDef(DPC_ObjectDetection_StaticCfg *staticCf
     }
 }
 
-float * vectorMulti(float matrix[3][3], float array[3]) {
-    /*Multiplies matrix by a vector to give a resultant vector*/
-    int i;
-    int k;
-    float* result = (float*)malloc(3 * sizeof(float));
+// float * vectorMulti(float matrix[3][3], float array[3]) {
+//     /*Multiplies matrix by a vector to give a resultant vector*/
+//     int i;
+//     int k;
+//     float* result = (float*)malloc(3 * sizeof(float));
 
-    for (i = 0; i < 3; ++i) {
-        result[i] = 0;
-        for (k = 0; k < 3; ++k) {
-            result[i] += matrix[i][k] * array[k];
-        }
-    }
+//     for (i = 0; i < 3; ++i) {
+//         result[i] = 0;
+//         for (k = 0; k < 3; ++k) {
+//             result[i] += matrix[i][k] * array[k];
+//         }
+//     }
     
-    return result;
-}
+//     return result;
+// }
 
-float * vectorAdd(float vector1[3], float vector2[3]) {
-    /*Adds two vectors together to give a resultant vector*/
-    int i;
-    float* result = (float*)malloc(3 * sizeof(float));
+// float * vectorAdd(float vector1[3], float vector2[3]) {
+//     /*Adds two vectors together to give a resultant vector*/
+//     int i;
+//     float* result = (float*)malloc(3 * sizeof(float));
 
-    for (i = 0; i < 3; ++i) {
-        result[i] = (vector1[i] + vector2[i]);
-    }
+//     for (i = 0; i < 3; ++i) {
+//         result[i] = (vector1[i] + vector2[i]);
+//     }
 
-    return result;
-}
+//     return result;
+// }
 
-/*Test function to see if I can do things*/
-static void DPC_ObjDet_Transform_Coordinates(DPIF_PointCloudCartesian* objOut, uint32_t numObjOut) {
-    uint32_t i;
+// /*Test function to see if I can do things*/
+// static void DPC_ObjDet_Transform_Coordinates(DPIF_PointCloudCartesian* objOut, uint32_t numObjOut) {
+//     uint32_t i;
     
-    float radar_angle = 52.3;
-    float radar_pos[3] = {0.271, 0.311, 0.18};
-    float theta =  M_PI / 180 * radar_angle; //Radar angle in radians.
+//     float radar_angle = 52.3;
+//     float radar_pos[3] = {0.271, 0.311, 0.18};
+//     float theta =  M_PI / 180 * radar_angle; //Radar angle in radians.
 
-    float R_rotate[3][3] = {{-sin(theta), cos(theta),  0},
-                            {cos(theta),  sin(theta),  0},     
-                            {         0,           0, -1}};
+//     float R_rotate[3][3] = {{-sin(theta), cos(theta),  0},
+//                             {cos(theta),  sin(theta),  0},     
+//                             {         0,           0, -1}};
 
-    for (i = 0; i < numObjOut; i++) {
-        float obstacle_pos[3] = {(objOut+i)->x, (objOut+i)->y, (objOut+i)->z};    
+//     for (i = 0; i < numObjOut; i++) {
+//         float obstacle_pos[3] = {(objOut+i)->x, (objOut+i)->y, (objOut+i)->z};    
 
 
-        float* temp_array = vectorMulti(R_rotate, obstacle_pos);
-        float* obstacle_local_pos = vectorAdd(temp_array, radar_pos);     
+//         float* temp_array = vectorMulti(R_rotate, obstacle_pos);
+//         float* obstacle_local_pos = vectorAdd(temp_array, radar_pos);     
 
-        (objOut+i)->x = obstacle_local_pos[0];
-        (objOut+i)->y = obstacle_local_pos[1];
-        (objOut+i)->z = obstacle_local_pos[2];
+//         (objOut+i)->x = obstacle_local_pos[0];
+//         (objOut+i)->y = obstacle_local_pos[1];
+//         (objOut+i)->z = obstacle_local_pos[2];
 
-        free(temp_array);
-        free(obstacle_local_pos);
+//         free(temp_array);
+//         free(obstacle_local_pos);
 
-    }
-}
+//     }
+// }
 
 
 /**
@@ -910,6 +914,10 @@ int32_t DPC_ObjectDetection_execute
     DPC_ObjectDetection_ProcessCallBackCfg *processCallBack;
     int32_t i;
 
+    uint8_t cntr;
+    // point_t points[2]; //Can't be in terms of a variable, might need to malloc
+    point_t* points = (point_t*)malloc(MAX_OBJ_OUT * sizeof(point_t));
+    
     objDetObj = (ObjDetObj *) handle;
     DebugP_assert (objDetObj != NULL);
     DebugP_assert (ptrResult != NULL);
@@ -1019,11 +1027,6 @@ int32_t DPC_ObjectDetection_execute
     }
 
 
-    //Coordinate transformation
-    DPC_ObjDet_Transform_Coordinates(subFrmObj->dpuCfg.aoaCfg.res.detObjOut, outAoaProc.numAoADetectedPoints);
-
-
-    
 
     /* Set DPM result with measure (bias, phase) and detection info */
     result->numObjOut = outAoaProc.numAoADetectedPoints;
@@ -1042,7 +1045,24 @@ int32_t DPC_ObjectDetection_execute
     {
         result->compRxChanBiasMeasurement = NULL;
     }
+    
+    for (cntr = 0; cntr < result->numObjOut; cntr++) {
+        (points+cntr)->x = (result->objOut+cntr)->x;
+        (points+cntr)->y = (result->objOut+cntr)->y;
+        (points+cntr)->z = (result->objOut+cntr)->z;
+        (points+cntr)->cluster_id = -1;
+    }
 
+    dbscan(points, result->numObjOut, objDetObj->commonCfg.measureRxChannelBiasCfg.targetDistance, (uint8_t) objDetObj->commonCfg.measureRxChannelBiasCfg.searchWinSize);
+
+    for (cntr = 0; cntr < result->numObjOut; cntr++) {
+        (result->objOutSideInfo + cntr)->noise = (points+cntr)->cluster_id; //Overwriting noise value with cluster_id for debugging
+    } 
+
+    free(points);
+
+    //Coordinate transformation
+    // DPC_ObjDet_Transform_Coordinates(result->ObjOut, result->numObjOut);
 
 
     /* For rangeProcHwa, interChirpProcessingMargin is not available */

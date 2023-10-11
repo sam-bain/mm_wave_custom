@@ -17,7 +17,7 @@
 
 --args 0x0
 -heap  0x0
--stack 0x800
+-stack 0x600
 
 /*
  * Linker command file contributions from all loaded packages:
