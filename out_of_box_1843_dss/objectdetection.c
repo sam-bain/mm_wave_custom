@@ -43,6 +43,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdio.h>
+#include <math.h>
 
 #define DBG_DPC_OBJDET
 
@@ -56,8 +57,6 @@
 #include <ti/utils/cycleprofiler/cycle_profiler.h>
 #include <ti/control/dpm/dpm.h>
 #include <ti/board/antenna_geometry.h>
-
-#include <ti/alg/mmwavelib/src/detection/mmwavelib_clustering.h>
 
 #if defined(USE_2D_AOA_DPU)
 #include <ti/datapath/dpc/dpu/aoa2dproc/aoa2dprochwa.h>
@@ -817,6 +816,64 @@ static void DPC_ObjDet_GetAntGeometryDef(DPC_ObjectDetection_StaticCfg *staticCf
     }
 }
 
+float * vectorMulti(float matrix[3][3], float array[3]) {
+    /*Multiplies matrix by a vector to give a resultant vector*/
+    int i;
+    int k;
+    float* result = (float*)malloc(3 * sizeof(float));
+
+    for (i = 0; i < 3; ++i) {
+        result[i] = 0;
+        for (k = 0; k < 3; ++k) {
+            result[i] += matrix[i][k] * array[k];
+        }
+    }
+    
+    return result;
+}
+
+float * vectorAdd(float vector1[3], float vector2[3]) {
+    /*Adds two vectors together to give a resultant vector*/
+    int i;
+    float* result = (float*)malloc(3 * sizeof(float));
+
+    for (i = 0; i < 3; ++i) {
+        result[i] = (vector1[i] + vector2[i]);
+    }
+
+    return result;
+}
+
+/*Test function to see if I can do things*/
+static void DPC_ObjDet_Transform_Coordinates(DPIF_PointCloudCartesian* objOut, uint32_t numObjOut) {
+    uint32_t i;
+    
+    float radar_angle = 52.3;
+    float radar_pos[3] = {0.271, 0.311, 0.18};
+    float theta =  M_PI / 180 * radar_angle; //Radar angle in radians.
+
+    float R_rotate[3][3] = {{-sin(theta), cos(theta),  0},
+                            {cos(theta),  sin(theta),  0},     
+                            {         0,           0, -1}};
+
+    for (i = 0; i < numObjOut; i++) {
+        float obstacle_pos[3] = {(objOut+i)->x, (objOut+i)->y, (objOut+i)->z};    
+
+
+        float* temp_array = vectorMulti(R_rotate, obstacle_pos);
+        float* obstacle_local_pos = vectorAdd(temp_array, radar_pos);     
+
+        (objOut+i)->x = obstacle_local_pos[0];
+        (objOut+i)->y = obstacle_local_pos[1];
+        (objOut+i)->z = obstacle_local_pos[2];
+
+        free(temp_array);
+        free(obstacle_local_pos);
+
+    }
+}
+
+
 /**
  *  @b Description
  *  @n
@@ -960,6 +1017,13 @@ int32_t DPC_ObjectDetection_execute
     {
         goto exit;
     }
+
+
+    //Coordinate transformation
+    DPC_ObjDet_Transform_Coordinates(subFrmObj->dpuCfg.aoaCfg.res.detObjOut, outAoaProc.numAoADetectedPoints);
+
+
+    
 
     /* Set DPM result with measure (bias, phase) and detection info */
     result->numObjOut = outAoaProc.numAoADetectedPoints;

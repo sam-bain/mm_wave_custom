@@ -346,7 +346,7 @@ static int32_t MmwDemo_CLISensorStop (int32_t argc, char* argv[])
         (gMmwMssMCB.sensorState == MmwDemo_SensorState_INIT) ||
         (gMmwMssMCB.sensorState == MmwDemo_SensorState_OPENED))
     {
-        CLI_write ("Ignored: Sensor is already stopped you silly billy\n");
+        CLI_write ("Ignored: Sensor is already stopped you silly billy 5\n");
         return 0;
     }
 

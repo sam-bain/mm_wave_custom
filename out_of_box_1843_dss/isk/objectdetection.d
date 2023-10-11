@@ -14,6 +14,13 @@ objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/_ti_config.h
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/linkage.h
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdio.h
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdarg.h
+objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/math.h
+objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/elfnames.h
+objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/abi_prefix.h
+objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/_bsdmath.h
+objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/machine/_limits.h
+objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/mathf.h
+objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/mathl.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/soc.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/mmwave_error.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/HwiP.h
@@ -45,13 +52,6 @@ objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/alg/mmwaveli
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/alg/mmwavelib/include/mmwavelib_cplx_types.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/aoaproc/aoaprochwa.h
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
-objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/math.h
-objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/elfnames.h
-objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/abi_prefix.h
-objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/_bsdmath.h
-objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/machine/_limits.h
-objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/mathf.h
-objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/mathl.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/hwa.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_radarcube.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_pointcloud.h
@@ -270,6 +270,20 @@ C:/ti/ti-cgt-c6000_8.3.3/include/stdio.h:
 
 C:/ti/ti-cgt-c6000_8.3.3/include/stdarg.h:
 
+C:/ti/ti-cgt-c6000_8.3.3/include/math.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/elfnames.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/abi_prefix.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/_bsdmath.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/machine/_limits.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/mathf.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/mathl.h:
+
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/soc.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/mmwave_error.h:
@@ -331,20 +345,6 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/alg/mmwavelib/include/mmwavelib_cpl
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/aoaproc/aoaprochwa.h:
 
 C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
-
-C:/ti/ti-cgt-c6000_8.3.3/include/math.h:
-
-C:/ti/ti-cgt-c6000_8.3.3/include/elfnames.h:
-
-C:/ti/ti-cgt-c6000_8.3.3/include/abi_prefix.h:
-
-C:/ti/ti-cgt-c6000_8.3.3/include/_bsdmath.h:
-
-C:/ti/ti-cgt-c6000_8.3.3/include/machine/_limits.h:
-
-C:/ti/ti-cgt-c6000_8.3.3/include/mathf.h:
-
-C:/ti/ti-cgt-c6000_8.3.3/include/mathl.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/hwa.h:
 
