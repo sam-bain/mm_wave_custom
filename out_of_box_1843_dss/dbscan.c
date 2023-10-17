@@ -4,6 +4,8 @@
 #define UNCLASSIFIED -1
 #define NOISE -2
 
+#define LONG_DISTANCE_DETECTION 100
+
 #define CORE_POINT 1
 #define NOT_CORE_POINT 0
 
@@ -41,7 +43,8 @@ int expand(
     point_t *points,
     uint8_t num_points,
     float epsilon,
-    uint8_t minpts);
+    uint8_t minpts,
+    float distance_threshold);
 int spread(
     uint8_t index,
     epsilon_neighbours_t *seeds,
@@ -155,13 +158,14 @@ void dbscan(
     point_t *points,
     uint8_t num_points,
     float epsilon,
-    uint8_t minpts)
+    uint8_t minpts,
+    float distance_threshold)
 {
     uint8_t i, cluster_id = 0;
     for (i = 0; i < num_points; ++i) {
         if (points[i].cluster_id == UNCLASSIFIED) {
             if (expand(i, cluster_id, points,
-                       num_points, epsilon, minpts) == CORE_POINT)
+                       num_points, epsilon, minpts, distance_threshold) == CORE_POINT)
                 ++cluster_id;
         }
     }
@@ -173,7 +177,8 @@ int expand(
     point_t *points,
     uint8_t num_points,
     float epsilon,
-    uint8_t minpts)
+    uint8_t minpts,
+    float distance_threshold)
 {
     int return_value = NOT_CORE_POINT;
     epsilon_neighbours_t *seeds =
@@ -182,9 +187,14 @@ int expand(
     if (seeds == NULL)
         return FAILURE;
 
-    if (seeds->num_members < minpts)
-        points[index].cluster_id = NOISE;
-    else {
+    if (seeds->num_members < minpts) {
+        point_t origin = {0, 0, 0, UNCLASSIFIED};
+        if (euclidean_dist(&origin, &points[index]) > distance_threshold) {
+            points[index].cluster_id = LONG_DISTANCE_DETECTION;
+        } else {
+            points[index].cluster_id = NOISE;
+        }
+    } else {
         points[index].cluster_id = cluster_id;
         node_t *h = seeds->head;
         while (h) {

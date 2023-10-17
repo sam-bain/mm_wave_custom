@@ -200,6 +200,8 @@ ObjDetObj     *gObjDetObj;
 
 #define MAX_OBJ_OUT 50
 
+#define THRESHOLD_TO_SNR 7.5/32 //Slightly confusing translation from what the threshold defined in the config is converted to to the outputted SNR values.
+
 /**************************************************************************
  ************************** Local Functions *******************************
  **************************************************************************/
@@ -877,6 +879,46 @@ static void DPC_ObjDet_GetAntGeometryDef(DPC_ObjectDetection_StaticCfg *staticCf
 //     }
 // }
 
+// /**
+//  *  @b Description
+//  *  @n
+//  *      Assisting function that calculates the distance from the sensor to a detected obstacle given its 
+//  *      position in cartesian coordinates
+//  *
+//  *  @param[in]  objOut Cartesian coordinates of point
+//  *
+//  *
+//  *  @retval distance to obstacle in metres
+//  */
+// float get_distance_cartesian(DPIF_PointCloudCartesian * objOut)
+// {
+//     return sqrt(pow(objOut->x, 2) + pow(objOut->y, 2) + pow(objOut->z, 2));
+// }
+
+// /**
+//  *  @b Description
+//  *  @n
+//  *      Assisting function that calculates whether the obstacle is of a high enough strength, which is 
+//  *      dynamically calculated based on the distance to the object
+//  *
+//  *  @param[in]  distance The distance to the obstacle in metres
+//  *  @param[in]  snr CFAR cell to side noise ratio in dB expressed in 0.1 steps of dB
+//  *  @param[in]  threshold_base The base threshold defined in the config file
+//  *  @param[in]  max_distance The maximum distance defined in the config file FOV
+//  *  @param[in]  threshold_multiplier Multiplier that changes the slope of the dynamic threshold. Can be changed by adapting the last value in the multiObjBeamFormingCfg line
+//  *  
+//  *  @retval A boolean indicating whether the point reaches the threshold
+//  */
+// bool above_dynamic_threshold(float distance, int16_t snr, uint16_t threshold_base, float max_distance, float threshold_multiplier)
+// {
+//     int retval = 0;
+//     if (distance < max_distance) {
+//         retval = (snr > (sqrt(threshold_multiplier*(max_distance - distance))+threshold_base*THRESHOLD_TO_SNR));
+//     } else {
+//         retval = 0;
+//     }
+//     return retval;
+// }
 
 /**
  *  @b Description
@@ -916,7 +958,7 @@ int32_t DPC_ObjectDetection_execute
 
     uint8_t cntr;
     // point_t points[2]; //Can't be in terms of a variable, might need to malloc
-    point_t* points = (point_t*)malloc(MAX_OBJ_OUT * sizeof(point_t));
+    point_t* points = (point_t*)malloc(MAX_OBJ_OUT * sizeof(point_t));  
     
     objDetObj = (ObjDetObj *) handle;
     DebugP_assert (objDetObj != NULL);
@@ -1045,7 +1087,18 @@ int32_t DPC_ObjectDetection_execute
     {
         result->compRxChanBiasMeasurement = NULL;
     }
-    
+
+    // //Dynamically threshold points based on distance from module
+    // for (cntr = 0; cntr < result->numObjOut; cntr++) {
+    //     float distance = get_distance_cartesian(result->objOut+cntr);
+    //     if (above_dynamic_threshold(distance, (result->objOutSideInfo + cntr)->snr, subFrmObj->dynCfg.cfarCfgRange.thresholdScale, subFrmObj->dynCfg.fovRange.max, subFrmObj->dynCfg.multiObjBeamFormingCfg.multiPeakThrsScal)) {
+    //         (result->objOutSideInfo + cntr)->noise = 1;
+    //     } else {
+    //         (result->objOutSideInfo + cntr)->noise = 0;
+    //     }
+    // }
+ 
+    //Prepare input for dbscan module
     for (cntr = 0; cntr < result->numObjOut; cntr++) {
         (points+cntr)->x = (result->objOut+cntr)->x;
         (points+cntr)->y = (result->objOut+cntr)->y;
@@ -1053,7 +1106,8 @@ int32_t DPC_ObjectDetection_execute
         (points+cntr)->cluster_id = -1;
     }
 
-    dbscan(points, result->numObjOut, objDetObj->commonCfg.measureRxChannelBiasCfg.targetDistance, (uint8_t) objDetObj->commonCfg.measureRxChannelBiasCfg.searchWinSize);
+    //Execute dbscan clustering
+    dbscan(points, result->numObjOut, objDetObj->commonCfg.measureRxChannelBiasCfg.targetDistance, (uint8_t) objDetObj->commonCfg.measureRxChannelBiasCfg.searchWinSize, subFrmObj->dynCfg.multiObjBeamFormingCfg.multiPeakThrsScal);
 
     for (cntr = 0; cntr < result->numObjOut; cntr++) {
         (result->objOutSideInfo + cntr)->noise = (points+cntr)->cluster_id; //Overwriting noise value with cluster_id for debugging

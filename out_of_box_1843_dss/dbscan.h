@@ -17,6 +17,7 @@ void dbscan(
     point_t *points,
     uint8_t num_points,
     float epsilon,
-    uint8_t minpts);
+    uint8_t minpts,
+    float distance_threshold);
 
 #endif /*DBSCAN_H*/
