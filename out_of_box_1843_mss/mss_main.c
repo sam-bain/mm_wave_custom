@@ -1260,14 +1260,14 @@ static void MmwDemo_transmitProcessedOutput
         packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
         tlvIdx++;
     }
-    /*Cluster Info*/
-    if ((pGuiMonSel->detectedObjects == 1) && (result->numObjOut > 0))
-    {
-        tl[tlvIdx].type = 5;
-        tl[tlvIdx].length = sizeof(uint8_t) * 5;
-        packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
-        tlvIdx++;
-    }
+    // /*Cluster Info*/
+    // if ((pGuiMonSel->detectedObjects == 1) && (result->numObjOut > 0))
+    // {
+    //     tl[tlvIdx].type = 5;
+    //     tl[tlvIdx].length = sizeof(uint8_t) * 5;
+    //     packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
+    //     tlvIdx++;
+    // }
     if (pGuiMonSel->logMagRange)
     {
         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_RANGE_PROFILE;
@@ -1354,19 +1354,19 @@ static void MmwDemo_transmitProcessedOutput
         tlvIdx++;
     }
 
-    uint8_t objOutClusterInfo[5] = {1, 2, 3, 4, 5};
-    /* Send detected Objects Cluster Info */
-    if ((pGuiMonSel->detectedObjects == 1) && (result->numObjOut > 0))
-    {
+    // uint8_t objOutClusterInfo[5] = {1, 2, 3, 4, 5};
+    // /* Send detected Objects Cluster Info */
+    // if ((pGuiMonSel->detectedObjects == 1) && (result->numObjOut > 0))
+    // {
 
-        UART_writePolling (uartHandle,
-                           (uint8_t*)&tl[tlvIdx],
-                           sizeof(MmwDemo_output_message_tl));
+    //     UART_writePolling (uartHandle,
+    //                        (uint8_t*)&tl[tlvIdx],
+    //                        sizeof(MmwDemo_output_message_tl));
 
-        UART_writePolling (uartHandle, (uint8_t*)objOutClusterInfo,
-                           sizeof(uint8_t) * 5);
-        tlvIdx++;
-    }
+    //     UART_writePolling (uartHandle, (uint8_t*)objOutClusterInfo,
+    //                        sizeof(uint8_t) * 5);
+    //     tlvIdx++;
+    // }
     
 
     /* Send Range profile */
