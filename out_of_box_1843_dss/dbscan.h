@@ -11,6 +11,7 @@ typedef struct point_s point_t;
 struct point_s {
     float x, y, z;
     int8_t cluster_id;
+    float snr;
 };
 
 void dbscan(
@@ -18,6 +19,6 @@ void dbscan(
     uint8_t num_points,
     float epsilon,
     uint8_t minpts,
-    float distance_threshold);
+    float override_threshold);
 
 #endif /*DBSCAN_H*/

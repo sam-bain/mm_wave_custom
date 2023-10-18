@@ -4,7 +4,7 @@
 #define UNCLASSIFIED -1
 #define NOISE -2
 
-#define LONG_DISTANCE_DETECTION 100
+#define ISOLATED_PEAK 100
 
 #define CORE_POINT 1
 #define NOT_CORE_POINT 0
@@ -44,7 +44,7 @@ int expand(
     uint8_t num_points,
     float epsilon,
     uint8_t minpts,
-    float distance_threshold);
+    float override_threshold);
 int spread(
     uint8_t index,
     epsilon_neighbours_t *seeds,
@@ -105,14 +105,18 @@ epsilon_neighbours_t *get_epsilon_neighbours(
     int i;
     epsilon_neighbours_t *en = (epsilon_neighbours_t *)
         calloc(1, sizeof(epsilon_neighbours_t));
+    point_t origin = {0, 0, 0, UNCLASSIFIED};
+    float range = euclidean_dist(&origin, &points[index]);
     if (en == NULL) {
         perror("Failed to allocate epsilon neighbours.");
         return en;
     }
+    
+    
     for (i = 0; i < num_points; ++i) {
         if (i == index)
             continue;
-        if (euclidean_dist(&points[index], &points[i]) > epsilon)
+        if (euclidean_dist(&points[index], &points[i]) > (epsilon * range))
             continue;
         else {
             if (append_at_end(i, en) == FAILURE) {
@@ -159,13 +163,13 @@ void dbscan(
     uint8_t num_points,
     float epsilon,
     uint8_t minpts,
-    float distance_threshold)
+    float override_threshold)
 {
     uint8_t i, cluster_id = 0;
     for (i = 0; i < num_points; ++i) {
         if (points[i].cluster_id == UNCLASSIFIED) {
             if (expand(i, cluster_id, points,
-                       num_points, epsilon, minpts, distance_threshold) == CORE_POINT)
+                       num_points, epsilon, minpts) == CORE_POINT)
                 ++cluster_id;
         }
     }
@@ -178,7 +182,7 @@ int expand(
     uint8_t num_points,
     float epsilon,
     uint8_t minpts,
-    float distance_threshold)
+    float override_threshold)
 {
     int return_value = NOT_CORE_POINT;
     epsilon_neighbours_t *seeds =
@@ -188,9 +192,8 @@ int expand(
         return FAILURE;
 
     if (seeds->num_members < minpts) {
-        point_t origin = {0, 0, 0, UNCLASSIFIED};
-        if (euclidean_dist(&origin, &points[index]) > distance_threshold) {
-            points[index].cluster_id = LONG_DISTANCE_DETECTION;
+        if (points[index].snr > override_threshold) {
+            points[index].cluster_id = ISOLATED_PEAK;
         } else {
             points[index].cluster_id = NOISE;
         }
@@ -234,8 +237,7 @@ int spread(
         point_t *d;
         while (n) {
             d = &points[n->index];
-            if (d->cluster_id == NOISE ||
-                d->cluster_id == UNCLASSIFIED) {
+            if (d->cluster_id == NOISE || d->cluster_id == UNCLASSIFIED || d->cluster_id == ISOLATED_PEAK) {
                 if (d->cluster_id == UNCLASSIFIED) {
                     if (append_at_end(n->index, seeds)
                         == FAILURE) {

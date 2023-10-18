@@ -200,7 +200,7 @@ ObjDetObj     *gObjDetObj;
 
 #define MAX_OBJ_OUT 50
 
-#define THRESHOLD_TO_SNR 7.5/32 //Slightly confusing translation from what the threshold defined in the config is converted to to the outputted SNR values.
+#define THRESHOLD_TO_SNR 7.5 //Slightly confusing translation from what the threshold defined in the config is converted to to the outputted SNR values.
 
 /**************************************************************************
  ************************** Local Functions *******************************
@@ -1104,6 +1104,7 @@ int32_t DPC_ObjectDetection_execute
         (points+cntr)->y = (result->objOut+cntr)->y;
         (points+cntr)->z = (result->objOut+cntr)->z;
         (points+cntr)->cluster_id = -1;
+        (points+cntr)->snr = (result->objOutSideInfo+cntr)->snr/THRESHOLD_TO_SNR;
     }
 
     //Execute dbscan clustering
