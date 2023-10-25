@@ -1108,7 +1108,8 @@ int32_t DPC_ObjectDetection_execute
     }
 
     //Execute dbscan clustering
-    dbscan(points, result->numObjOut, objDetObj->commonCfg.measureRxChannelBiasCfg.targetDistance, (uint8_t) objDetObj->commonCfg.measureRxChannelBiasCfg.searchWinSize, subFrmObj->dynCfg.multiObjBeamFormingCfg.multiPeakThrsScal);
+    dbscan(points, result->numObjOut, objDetObj->commonCfg.measureRxChannelBiasCfg.targetDistance, (uint8_t) objDetObj->commonCfg.measureRxChannelBiasCfg.searchWinSize, subFrmObj->dpuCfg.rangeCfg.dynCfg.calibDcRangeSigCfg->negativeBinIdx,
+                                 subFrmObj->dpuCfg.rangeCfg.dynCfg.calibDcRangeSigCfg->positiveBinIdx);
 
     for (cntr = 0; cntr < result->numObjOut; cntr++) {
         (result->objOutSideInfo + cntr)->noise = (points+cntr)->cluster_id; //Overwriting noise value with cluster_id for debugging

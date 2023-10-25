@@ -19,6 +19,7 @@ void dbscan(
     uint8_t num_points,
     float epsilon,
     uint8_t minpts,
-    float override_threshold);
+    int16_t override_intensity,
+    int16_t override_distance);
 
 #endif /*DBSCAN_H*/

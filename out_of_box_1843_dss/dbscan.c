@@ -5,6 +5,7 @@
 #define NOISE -2
 
 #define ISOLATED_PEAK 100
+#define LONG_DISTANCE 101
 
 #define CORE_POINT 1
 #define NOT_CORE_POINT 0
@@ -44,7 +45,8 @@ int expand(
     uint8_t num_points,
     float epsilon,
     uint8_t minpts,
-    float override_threshold);
+    int16_t override_intensity,
+    int16_t override_distance);
 int spread(
     uint8_t index,
     epsilon_neighbours_t *seeds,
@@ -163,13 +165,14 @@ void dbscan(
     uint8_t num_points,
     float epsilon,
     uint8_t minpts,
-    float override_threshold)
+    int16_t override_intensity,
+    int16_t override_distance)
 {
     uint8_t i, cluster_id = 0;
     for (i = 0; i < num_points; ++i) {
         if (points[i].cluster_id == UNCLASSIFIED) {
             if (expand(i, cluster_id, points,
-                       num_points, epsilon, minpts) == CORE_POINT)
+                       num_points, epsilon, minpts, override_intensity, override_distance) == CORE_POINT)
                 ++cluster_id;
         }
     }
@@ -182,7 +185,8 @@ int expand(
     uint8_t num_points,
     float epsilon,
     uint8_t minpts,
-    float override_threshold)
+    int16_t override_intensity,
+    int16_t override_distance)
 {
     int return_value = NOT_CORE_POINT;
     epsilon_neighbours_t *seeds =
@@ -192,8 +196,13 @@ int expand(
         return FAILURE;
 
     if (seeds->num_members < minpts) {
-        if (points[index].snr > override_threshold) {
+        point_t origin = {0, 0, 0, UNCLASSIFIED};
+        float range = euclidean_dist(&origin, &points[index]);
+        
+        if (points[index].snr > override_intensity) { //High intensity override
             points[index].cluster_id = ISOLATED_PEAK;
+        } else if (range > override_distance) { //Long distance override
+            points[index].cluster_id = LONG_DISTANCE;
         } else {
             points[index].cluster_id = NOISE;
         }
@@ -237,7 +246,7 @@ int spread(
         point_t *d;
         while (n) {
             d = &points[n->index];
-            if (d->cluster_id == NOISE || d->cluster_id == UNCLASSIFIED || d->cluster_id == ISOLATED_PEAK) {
+            if (d->cluster_id == NOISE || d->cluster_id == UNCLASSIFIED || d->cluster_id == ISOLATED_PEAK || d->cluster_id == LONG_DISTANCE) {
                 if (d->cluster_id == UNCLASSIFIED) {
                     if (append_at_end(n->index, seeds)
                         == FAILURE) {

@@ -714,21 +714,21 @@ static int32_t MmwDemo_CLICalibDcRangeSig (int32_t argc, char* argv[])
     cfg.positiveBinIdx   = (int16_t)  atoi (argv[4]);
     cfg.numAvgChirps     = (uint16_t) atoi (argv[5]);
 
-    if (cfg.negativeBinIdx > 0)
-    {
-        CLI_write ("Error: Invalid negative bin index\n");
-        return -1;
-    }
-    if (cfg.positiveBinIdx < 0)
-    {
-        CLI_write ("Error: Invalid positive bin index\n");
-        return -1;
-    }	
-    if ((cfg.positiveBinIdx - cfg.negativeBinIdx + 1) > DPU_RANGEPROC_SIGNATURE_COMP_MAX_BIN_SIZE)
-    {
-        CLI_write ("Error: Number of bins exceeds the limit\n");
-        return -1;
-    }
+    // if (cfg.negativeBinIdx > 0)
+    // {
+    //     CLI_write ("Error: Invalid negative bin index\n");
+    //     return -1;
+    // }
+    // if (cfg.positiveBinIdx < 0)
+    // {
+    //     CLI_write ("Error: Invalid positive bin index\n");
+    //     return -1;
+    // }	
+    // if ((cfg.positiveBinIdx - cfg.negativeBinIdx + 1) > DPU_RANGEPROC_SIGNATURE_COMP_MAX_BIN_SIZE)
+    // {
+    //     CLI_write ("Error: Number of bins exceeds the limit\n");
+    //     return -1;
+    // }
     log2NumAvgChirps = (uint32_t) mathUtils_ceilLog2(cfg.numAvgChirps);
     if (cfg.numAvgChirps != (1U << log2NumAvgChirps))
     {
