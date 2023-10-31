@@ -13,6 +13,8 @@ CMD_SRCS += \
 ../r4f_linker.cmd 
 
 C_SRCS += \
+../canard.c \
+../mmw_can.c \
 ../mmw_cli.c \
 ../mmw_lvds_stream.c \
 ../mmwdemo_adcconfig.c \
@@ -33,6 +35,8 @@ GEN_MISC_DIRS += \
 ./configPkg/ 
 
 C_DEPS += \
+./canard.d \
+./mmw_can.d \
 ./mmw_cli.d \
 ./mmw_lvds_stream.d \
 ./mmwdemo_adcconfig.d \
@@ -46,6 +50,8 @@ GEN_OPTS += \
 ./configPkg/compiler.opt 
 
 OBJS += \
+./canard.oer4f \
+./mmw_can.oer4f \
 ./mmw_cli.oer4f \
 ./mmw_lvds_stream.oer4f \
 ./mmwdemo_adcconfig.oer4f \
@@ -59,6 +65,8 @@ GEN_MISC_DIRS__QUOTED += \
 "configPkg\" 
 
 OBJS__QUOTED += \
+"canard.oer4f" \
+"mmw_can.oer4f" \
 "mmw_cli.oer4f" \
 "mmw_lvds_stream.oer4f" \
 "mmwdemo_adcconfig.oer4f" \
@@ -69,6 +77,8 @@ OBJS__QUOTED += \
 "objdetrangehwa.oer4f" 
 
 C_DEPS__QUOTED += \
+"canard.d" \
+"mmw_can.d" \
 "mmw_cli.d" \
 "mmw_lvds_stream.d" \
 "mmwdemo_adcconfig.d" \
@@ -83,6 +93,8 @@ GEN_FILES__QUOTED += \
 "configPkg\compiler.opt" 
 
 C_SRCS__QUOTED += \
+"../canard.c" \
+"../mmw_can.c" \
 "../mmw_cli.c" \
 "../mmw_lvds_stream.c" \
 "../mmwdemo_adcconfig.c" \

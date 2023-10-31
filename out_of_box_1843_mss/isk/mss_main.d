@@ -405,6 +405,9 @@ mss_main.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_
 mss_main.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/cycleprofiler/cycle_profiler.h
 mss_main.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/CycleprofilerP.h
 mss_main.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
+mss_main.oer4f: ../mmw_can.h
+mss_main.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdio.h
+mss_main.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdlib.h
 mss_main.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/rtrim/rtrimutils.h
 
 ../mss_main.c:
@@ -1216,6 +1219,12 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/cycleprofiler/cycle_profiler.
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/CycleprofilerP.h:
 
 C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h:
+
+../mmw_can.h:
+
+C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdio.h:
+
+C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdlib.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/rtrim/rtrimutils.h:
 

@@ -10,6 +10,8 @@ GEN_OPTS__FLAG := --cmd_file="configPkg/compiler.opt"
 GEN_CMDS__FLAG := -l"configPkg/linker.cmd" 
 
 ORDERED_OBJS += \
+"./canard.oer4f" \
+"./mmw_can.oer4f" \
 "./mmw_cli.oer4f" \
 "./mmw_lvds_stream.oer4f" \
 "./mmwdemo_adcconfig.oer4f" \
@@ -18,9 +20,16 @@ ORDERED_OBJS += \
 "./mmwdemo_rfparser.oer4f" \
 "./mss_main.oer4f" \
 "./objdetrangehwa.oer4f" \
+"./dsdlc_generated/src/proximity_sensor.Proximity.oer4f" \
+"./dsdlc_generated/src/uavcan.protocol.GetNodeInfo_req.oer4f" \
+"./dsdlc_generated/src/uavcan.protocol.GetNodeInfo_res.oer4f" \
+"./dsdlc_generated/src/uavcan.protocol.HardwareVersion.oer4f" \
+"./dsdlc_generated/src/uavcan.protocol.NodeStatus.oer4f" \
+"./dsdlc_generated/src/uavcan.protocol.SoftwareVersion.oer4f" \
 "../mmw_mss_linker.cmd" \
 "../r4f_linker.cmd" \
 $(GEN_CMDS__FLAG) \
+-llibcanfd_xwr18xx.aer4f \
 -llibosal_xwr18xx.aer4f \
 -llibesm_xwr18xx.aer4f \
 -llibgpio_xwr18xx.aer4f \
@@ -56,7 +65,9 @@ RMDIR := RMDIR /S/Q
 # All of the sources participating in the build are defined here
 -include sources.mk
 -include subdir_vars.mk
+-include dsdlc_generated/src/subdir_vars.mk
 -include subdir_rules.mk
+-include dsdlc_generated/src/subdir_rules.mk
 -include objects.mk
 
 ifneq ($(MAKECMDGOALS),clean)
@@ -170,7 +181,7 @@ dependents:
 out_of_box_1843_mss_isk.xer4f: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/mmwave_workspace/out_of_box_1843_dss/isk/out_of_box_1843_dss_isk.xe674
 	@echo 'Building target: "$@"'
 	@echo 'Invoking: Arm Linker'
-	"C:/ti/ti-cgt-arm_16.9.6.LTS/bin/armcl" -mv7R4 --code_state=16 --float_support=VFPv3D16 -me -O3 --define=SOC_XWR18XX --define=SUBSYS_MSS --define=DOWNLOAD_FROM_CCS --define=MMWAVE_L3RAM_NUM_BANK=8 --define=MMWAVE_SHMEM_TCMA_NUM_BANK=0 --define=MMWAVE_SHMEM_TCMB_NUM_BANK=0 --define=MMWAVE_SHMEM_BANK_SIZE=0x20000 --define=DebugP_ASSERT_ENABLED --define=_LITTLE_ENDIAN --define=OBJDET_NO_RANGE --define=APP_RESOURCE_FILE='<'ti/demo/xwr18xx/mmw/mmw_res.h'>' -g --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --enum_type=int --abi=eabi --obj_extension=.oer4f -z -m"out_of_box_1843_mss_isk.map" --heap_size=0x800 --stack_size=0x800 -i"C:/ti/ti-cgt-arm_16.9.6.LTS/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwave/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/dpm/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/adcbuf/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/crc/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/dma/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/esm/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/gpio/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/mailbox/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/pinmux/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/uart/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/qspi/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/qspiflash/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/cli/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/mathutils/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpu/rangeproc/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpedma/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/cbuff/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/rtrim/lib" -i"C:/ti/ti-cgt-arm_16.9.6.LTS/include" --reread_libs --disable_auto_rts --define=MMWAVE_L3RAM_NUM_BANK=6 --define=MMWAVE_SHMEM_TCMA_NUM_BANK=0 --define=MMWAVE_SHMEM_TCMB_NUM_BANK=0 --define=MMWAVE_SHMEM_BANK_SIZE=0x20000 --diag_error=10015 --diag_warning=225 --diag_wrap=off --display_error_number --warn_sections --xml_link_info="xwr18xx_mmw_demo_mss_linkInfo.xml" --rom_model --unused_section_elimination=on -o "out_of_box_1843_mss_isk.xer4f" $(ORDERED_OBJS)
+	"C:/ti/ti-cgt-arm_16.9.6.LTS/bin/armcl" -mv7R4 --code_state=16 --float_support=VFPv3D16 -me -O3 --define=SOC_XWR18XX --define=SUBSYS_MSS --define=DOWNLOAD_FROM_CCS --define=MMWAVE_L3RAM_NUM_BANK=8 --define=MMWAVE_SHMEM_TCMA_NUM_BANK=0 --define=MMWAVE_SHMEM_TCMB_NUM_BANK=0 --define=MMWAVE_SHMEM_BANK_SIZE=0x20000 --define=DebugP_ASSERT_ENABLED --define=_LITTLE_ENDIAN --define=OBJDET_NO_RANGE --define=APP_RESOURCE_FILE='<'ti/demo/xwr18xx/mmw/mmw_res.h'>' -g --diag_warning=225 --diag_wrap=off --display_error_number --gen_func_subsections=on --enum_type=int --abi=eabi --obj_extension=.oer4f -z -m"out_of_box_1843_mss_isk.map" --heap_size=0x800 --stack_size=0x800 -i"C:/ti/ti-cgt-arm_16.9.6.LTS/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwave/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/dpm/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/adcbuf/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/crc/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/dma/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/esm/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/gpio/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/mailbox/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/pinmux/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/uart/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/canfd/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/qspi/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/qspiflash/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/cli/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/mathutils/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpu/rangeproc/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpedma/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/cbuff/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/lib" -i"C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/rtrim/lib" -i"C:/ti/ti-cgt-arm_16.9.6.LTS/include" --reread_libs --disable_auto_rts --define=MMWAVE_L3RAM_NUM_BANK=6 --define=MMWAVE_SHMEM_TCMA_NUM_BANK=0 --define=MMWAVE_SHMEM_TCMB_NUM_BANK=0 --define=MMWAVE_SHMEM_BANK_SIZE=0x20000 --diag_error=10015 --diag_warning=225 --diag_wrap=off --display_error_number --warn_sections --xml_link_info="xwr18xx_mmw_demo_mss_linkInfo.xml" --rom_model -o "out_of_box_1843_mss_isk.xer4f" $(ORDERED_OBJS)
 	@echo 'Finished building target: "$@"'
 	@echo ' '
 	@$(MAKE) --no-print-directory post-build
@@ -178,8 +189,8 @@ out_of_box_1843_mss_isk.xer4f: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/mmwave_workspa
 # Other Targets
 clean:
 	-$(RM) $(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "mmw_cli.oer4f" "mmw_lvds_stream.oer4f" "mmwdemo_adcconfig.oer4f" "mmwdemo_flash.oer4f" "mmwdemo_monitor.oer4f" "mmwdemo_rfparser.oer4f" "mss_main.oer4f" "objdetrangehwa.oer4f" 
-	-$(RM) "mmw_cli.d" "mmw_lvds_stream.d" "mmwdemo_adcconfig.d" "mmwdemo_flash.d" "mmwdemo_monitor.d" "mmwdemo_rfparser.d" "mss_main.d" "objdetrangehwa.d" 
+	-$(RM) "canard.oer4f" "mmw_can.oer4f" "mmw_cli.oer4f" "mmw_lvds_stream.oer4f" "mmwdemo_adcconfig.oer4f" "mmwdemo_flash.oer4f" "mmwdemo_monitor.oer4f" "mmwdemo_rfparser.oer4f" "mss_main.oer4f" "objdetrangehwa.oer4f" "dsdlc_generated\src\proximity_sensor.Proximity.oer4f" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_req.oer4f" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_res.oer4f" "dsdlc_generated\src\uavcan.protocol.HardwareVersion.oer4f" "dsdlc_generated\src\uavcan.protocol.NodeStatus.oer4f" "dsdlc_generated\src\uavcan.protocol.SoftwareVersion.oer4f" 
+	-$(RM) "canard.d" "mmw_can.d" "mmw_cli.d" "mmw_lvds_stream.d" "mmwdemo_adcconfig.d" "mmwdemo_flash.d" "mmwdemo_monitor.d" "mmwdemo_rfparser.d" "mss_main.d" "objdetrangehwa.d" "dsdlc_generated\src\proximity_sensor.Proximity.d" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_req.d" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_res.d" "dsdlc_generated\src\uavcan.protocol.HardwareVersion.d" "dsdlc_generated\src\uavcan.protocol.NodeStatus.d" "dsdlc_generated\src\uavcan.protocol.SoftwareVersion.d" 
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'
 	-@echo ' '

@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "mmw_can.h": "c",
+        "dronecan_msgs.h": "c"
+    }
+}

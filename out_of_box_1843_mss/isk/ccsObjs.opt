@@ -1,3 +1,5 @@
+"./canard.oer4f"
+"./mmw_can.oer4f"
 "./mmw_cli.oer4f"
 "./mmw_lvds_stream.oer4f"
 "./mmwdemo_adcconfig.oer4f"
@@ -6,9 +8,16 @@
 "./mmwdemo_rfparser.oer4f"
 "./mss_main.oer4f"
 "./objdetrangehwa.oer4f"
+"./dsdlc_generated/src/proximity_sensor.Proximity.oer4f"
+"./dsdlc_generated/src/uavcan.protocol.GetNodeInfo_req.oer4f"
+"./dsdlc_generated/src/uavcan.protocol.GetNodeInfo_res.oer4f"
+"./dsdlc_generated/src/uavcan.protocol.HardwareVersion.oer4f"
+"./dsdlc_generated/src/uavcan.protocol.NodeStatus.oer4f"
+"./dsdlc_generated/src/uavcan.protocol.SoftwareVersion.oer4f"
 "../mmw_mss_linker.cmd"
 "../r4f_linker.cmd"
 -l"configPkg/linker.cmd"
+-llibcanfd_xwr18xx.aer4f
 -llibosal_xwr18xx.aer4f
 -llibesm_xwr18xx.aer4f
 -llibgpio_xwr18xx.aer4f

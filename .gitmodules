@@ -1,0 +1,4 @@
+
+[submodule "out_of_box_1843_mss/--force"]
+	path = out_of_box_1843_mss/--force
+	url = https://github.com/DroneCAN/libcanard

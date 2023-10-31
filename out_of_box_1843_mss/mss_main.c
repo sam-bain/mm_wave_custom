@@ -634,6 +634,9 @@
 /* Profiler Include Files */
 #include <ti/utils/cycleprofiler/cycle_profiler.h>
 
+/*Custom Include Files*/
+#include "mmw_can.h"
+
 #ifdef SYS_COMMON_RTRIM_MODIFY_EN
 #include <ti/utils/rtrim/rtrimutils.h>
 #endif
@@ -1189,6 +1192,8 @@ static void MmwDemo_transmitProcessedOutput
     cmplx16ImRe_t *azimuthStaticHeatMap;
     DPIF_PointCloudSideInfo *objOutSideInfo;
     DPC_ObjectDetection_Stats *stats;
+
+    static int counter = 0;
     
     /* Get subframe configuration */
     subFrameCfg = &gMmwMssMCB.subFrameCfg[result->subFrameIdx];
@@ -1325,6 +1330,16 @@ static void MmwDemo_transmitProcessedOutput
     UART_writePolling (uartHandle,
                        (uint8_t*)&header,
                        sizeof(MmwDemo_output_message_header));
+
+    counter++;
+    if (counter >= 10) { //TO CHANGE: Need to set up so happens at 1Hz regardless of frame rate
+        CAN_process1HzTasks();
+        counter = 0;
+    }
+
+    CAN_writeObjData(objOut, result->numObjOut); 
+    
+    CAN_processTx();
 
     tlvIdx = 0;
     /* Send detected Objects */
@@ -3743,6 +3758,10 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     /*****************************************************************************
      * Initialize the mmWave SDK components:
      *****************************************************************************/
+
+    /*Initialise the CAN Bus*/
+    Can_Initialize(gMmwMssMCB.socHandle);
+
     /* Initialize the UART */
     UART_init();
 
