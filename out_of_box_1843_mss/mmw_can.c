@@ -164,6 +164,14 @@ uint32_t            txDataLength, rxDataLength;
 CANFD_MCANFrameType frameType = CANFD_MCANFrameType_CLASSIC;
 // CANFD_MCANFrameType frameType = CANFD_MCANFrameType_FD;
 
+static void MCANAppInitParams(CANFD_MCANInitParams *mcanCfgParams);
+
+CANFD_Handle       canHandle;
+CANFD_MsgObjHandle txMsgObjHandle;
+
+CANFD_MCANMsgObjCfgParams txMsgObjectParams;
+
+
 static uint64_t timestamp_usec = 0;
 
 #define MMWDEMO_HEADER          0x7U
@@ -197,12 +205,7 @@ typedef enum mmwDemo_can_message_type_e
     CAN_MESSAGE_MMWDEMO_STATS
 } mmwDemo_can_message_type;
 
-static void MCANAppInitParams(CANFD_MCANInitParams *mcanCfgParams);
 
-CANFD_Handle       canHandle;
-CANFD_MsgObjHandle txMsgObjHandle;
-
-CANFD_MCANMsgObjCfgParams txMsgObjectParams;
 
 static void onTransferReceived(CanardInstance *ins, CanardRxTransfer *transfer);
 static bool shouldAcceptTransfer(const CanardInstance *ins,
@@ -308,7 +311,7 @@ void Can_Initialize(SOC_Handle socHandle)
     canHandle = CANFD_init(0U, &mcanCfgParams, &errCode);
     if (canHandle == NULL)
     {
-        System_printf("Error: CANFD Module Initialization failed [Error code %d]\n", errCode);
+        CLI_write("Error: CANFD Module Initialization failed [Error code %d]\n", errCode);
         return;
     }
 
@@ -477,21 +480,29 @@ static void MCANAppCallback(CANFD_MsgObjHandle handle, CANFD_Reason reason)
             memset(&rxData, 0, sizeof(rxData));
             dataLength = 0;
 
+
             retVal = CANFD_getData(handle, &id, &rxFrameType, &rxIdType, &rxDataLength, &rxData[0], &errCode);
             if (retVal < 0)
             {
-                System_printf("Error: CAN receive data for iteration %d failed [Error code %d]\n", iterationCount, errCode);
+                CLI_write("Error: CAN receive data for iteration %d failed [Error code %d]\n", iterationCount, errCode);
                 return;
             }
 
             if (rxFrameType != frameType)
             {
-                System_printf("Error: CAN received incorrect frame type Sent %d Received %d for iteration %d failed\n", frameType, rxFrameType, iterationCount);
+                CLI_write("Error: CAN received incorrect frame type Sent %d Received %d for iteration %d failed\n", frameType, rxFrameType, iterationCount);
                 return;
             }
 
             // Format for Libcanard and forward to canard module
             rx_frame.id = id;
+            CLI_write("Recieved frame ID: %d\n", id);
+            uint32_t index;
+            CLI_write("Data: ");
+            for (index = 0; index < rxDataLength; index++) {
+                CLI_write("%d ", rxData[index]);
+            }
+            
             memcpy(&rx_frame.data, &rxData, CANARD_CAN_FRAME_MAX_DATA_LEN);
             rx_frame.data_len = rxDataLength;
 
@@ -625,8 +636,6 @@ void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, uint32_t numObjOut)
     // uint8_t* buffer = (uint8_t*) malloc(PROXIMITY_SENSOR_PROXIMITY_MAX_SIZE);
     uint8_t buffer[PROXIMITY_SENSOR_PROXIMITY_MAX_SIZE];
 
-    timestamp_usec += 100000;
-
     if (numObjOut > 0) {
         proximity_message->sensor_id =    PROXIMITY_SENSOR_ID_FRONT_LEFT;
         proximity_message->reading_type = PROXIMITY_SENSOR_PROXIMITY_READING_TYPE_GOOD;
@@ -705,7 +714,7 @@ static void getUniqueID(uint8_t id[16])
 */
 static void handle_GetNodeInfo(CanardInstance *ins, CanardRxTransfer *transfer)
 {
-    printf("GetNodeInfo request from %d\n", transfer->source_node_id);
+    CLI_write("GetNodeInfo request from %d\n", transfer->source_node_id);
 
     uint8_t buffer[UAVCAN_PROTOCOL_GETNODEINFO_RESPONSE_MAX_SIZE];
     struct uavcan_protocol_GetNodeInfoResponse pkt;
@@ -728,7 +737,7 @@ static void handle_GetNodeInfo(CanardInstance *ins, CanardRxTransfer *transfer)
     getUniqueID(pkt.hardware_version.unique_id);
 
     strncpy((char*)pkt.name.data, "RadarNode", sizeof(pkt.name.data));
-    pkt.name.len = 9;
+    pkt.name.len = 10;
     // pkt.name.len = strnlen((char*)pkt.name.data, sizeof(pkt.name.data));
 
     uint16_t total_size = uavcan_protocol_GetNodeInfoResponse_encode(&pkt, buffer);
@@ -827,6 +836,7 @@ static void send_NodeStatus(void)
 */
 void CAN_process1HzTasks(void)
 {
+    timestamp_usec += 1000000;
     uint64_t timestamp_usec = micros64();
     /*
       Purge transfers that are no longer transmitted. This can free up some memory
@@ -858,6 +868,5 @@ void CAN_processTx(void)
         // const int16_t tx_res = Can_Transmit_Schedule(txf->id, txf->data, txf->data_len);
         CANFD_transmitData(txMsgObjHandle, txf->id, CANFD_MCANFrameType_CLASSIC, txf->data_len, txf->data, &errCode);
         canardPopTxQueue(&canard);
-        CLI_write("ID: %d, Len: %d, Data: %d, %d, %d, %d, %d, %d, %d, %d\n", txf->id, txf->data_len, txf->data[0], txf->data[1], txf->data[2], txf->data[3], txf->data[4], txf->data[5], txf->data[6], txf->data[7]);
     }
 }
