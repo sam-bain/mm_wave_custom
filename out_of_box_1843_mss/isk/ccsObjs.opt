@@ -17,7 +17,7 @@
 "../mmw_mss_linker.cmd"
 "../r4f_linker.cmd"
 -l"configPkg/linker.cmd"
--llibcanfd_xwr18xx.aer4f
+-llibcan_xwr18xx.aer4f
 -llibosal_xwr18xx.aer4f
 -llibesm_xwr18xx.aer4f
 -llibgpio_xwr18xx.aer4f

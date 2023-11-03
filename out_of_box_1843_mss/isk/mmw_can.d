@@ -309,9 +309,9 @@ mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/include
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/adcbuf/ADCBuf.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/hsiprotocol.h
-mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/canfd/canfd.h
+mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/can/can.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
-mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/canfd/include/hw_mcanss.h
+mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/can/include/hw_dcan.h
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/pinmux/pinmux.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/pinmux/include/pinmux_xwr18xx.h
@@ -1006,11 +1006,11 @@ C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/hsiprotocol.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/canfd/canfd.h:
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/can/can.h:
 
 C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/canfd/include/hw_mcanss.h:
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/can/include/hw_dcan.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/pinmux/pinmux.h:
 
