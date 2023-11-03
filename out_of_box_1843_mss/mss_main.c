@@ -1338,6 +1338,7 @@ static void MmwDemo_transmitProcessedOutput
     }
 
     //CAN_writeObjData(objOut, result->numObjOut); 
+    
     CAN_processTx();
 
     tlvIdx = 0;
@@ -3758,7 +3759,8 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
      * Initialize the mmWave SDK components:
      *****************************************************************************/
 
-
+    /*Initialise the CAN Bus*/
+    Can_Initialize(gMmwMssMCB.socHandle);
 
     /* Initialize the UART */
     UART_init();
@@ -3962,9 +3964,6 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
      * Initialize the CLI Module:
      *****************************************************************************/
     MmwDemo_CLIInit(MMWDEMO_CLI_TASK_PRIORITY);
-
-    /*Initialise the CAN Bus*/
-    Can_Initialize(gMmwMssMCB.socHandle);
 
     return;
 }
