@@ -30,7 +30,6 @@
 #include <stdio.h>
 #include <math.h>
 
-
 /* BIOS/XDC Include Files. */
 #include <xdc/std.h>
 #include <xdc/cfg/global.h>
@@ -152,6 +151,9 @@ volatile uint32_t iterationCount = 0U;
 uint32_t          dataLength     = 0U;
 uint32_t          msgLstErrCnt   = 0U;
 uint32_t          gDisplayStats  = 0;
+
+rlOsiMutexHdl_t mutexHandle;
+rlInt8_t mutexName[8] = "CAN_lock";
 
 /**************************************************************************
  *************************** MCAN Global Definitions ***************************
@@ -325,6 +327,8 @@ void Can_Initialize(SOC_Handle socHandle)
                NULL);
 
     canardSetLocalNodeID(&canard, MY_NODE_ID);
+
+    MMWave_osalMutexCreate(&mutexHandle, &mutexName);
 }
 
 /**
@@ -363,15 +367,7 @@ static void MCANAppErrStatusCallback(CANFD_Handle handle, CANFD_Reason reason, C
  *      Not Applicable.
  */
 static void MCANAppCallback(CANFD_MsgObjHandle handle, CANFD_Reason reason)
-{
-    int32_t             errCode, retVal;
-    uint32_t            id;
-    CANFD_MCANFrameType rxFrameType;
-    CANFD_MCANXidType   rxIdType;
-
-    CanardCANFrame rx_frame;
-    
-
+{    
     if (reason == CANFD_Reason_TX_COMPLETION)
     {
         {
@@ -383,6 +379,13 @@ static void MCANAppCallback(CANFD_MsgObjHandle handle, CANFD_Reason reason)
     if (reason == CANFD_Reason_RX)
     {
         {
+            int32_t             errCode, retVal;
+            uint32_t            id;
+            CANFD_MCANFrameType rxFrameType;
+            CANFD_MCANXidType   rxIdType;
+
+            CanardCANFrame rx_frame;
+
             /* Reset the receive buffer */
             memset(&rxData, 0, sizeof(rxData));
             dataLength = 0;
@@ -510,11 +513,6 @@ void populate_proximity_message(DPIF_PointCloudCartesian* objPos, struct proximi
     proximity_message->distance = sqrt(xy*xy + objPos->z*objPos->z);
     proximity_message->yaw = wrap_360(180/M_PI * atan2(objPos->x, objPos->y));
     proximity_message->pitch = 180/M_PI * (M_PI/2 - atan2(xy, objPos->z));
-
-    // proximity_message->distance = 1;
-    // proximity_message->yaw = 2;
-    // proximity_message->pitch = 3;
-
 }
 
 /**
@@ -529,6 +527,8 @@ void populate_proximity_message(DPIF_PointCloudCartesian* objPos, struct proximi
  */
 void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, uint32_t numObjOut)
 {
+    timestamp_usec += 100000;
+
     int index;
     struct proximity_sensor_Proximity* proximity_message = malloc(sizeof(struct proximity_sensor_Proximity));
 
@@ -546,32 +546,19 @@ void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, uint32_t numObjOut)
         proximity_message->reading_type = PROXIMITY_SENSOR_PROXIMITY_READING_TYPE_GOOD;
         proximity_message->flags =        0;
 
-        //Send single object per timestep for debug
-        populate_proximity_message(objOut, proximity_message);
-        len = proximity_sensor_Proximity_encode(proximity_message, buffer);
+        for (index = 0; index < numObjOut; index++) {
+            populate_proximity_message(objOut+index, proximity_message);
+            len = proximity_sensor_Proximity_encode(proximity_message, buffer);
 
-        //Add proximity message to CAN queue
-        canardBroadcast(&canard,
-            PROXIMITY_SENSOR_PROXIMITY_SIGNATURE,
-            PROXIMITY_SENSOR_PROXIMITY_ID,
-            &transfer_id,
-            CANARD_TRANSFER_PRIORITY_LOW,
-            buffer,
-            len); 
-
-        // for (index = 0; index < numObjOut; index++) {
-        //     populate_proximity_message(objOut+index, proximity_message);
-        //     len = proximity_sensor_Proximity_encode(proximity_message, buffer);
-
-        //     //Add proximity message to CAN queue
-        //     canardBroadcast(&canard,
-        //         PROXIMITY_SENSOR_PROXIMITY_SIGNATURE,
-        //         PROXIMITY_SENSOR_PROXIMITY_ID,
-        //         &transfer_id,
-        //         CANARD_TRANSFER_PRIORITY_LOW,
-        //         buffer,
-        //         len); 
-        // }
+            //Add proximity message to CAN queue
+            canardBroadcast(&canard,
+                PROXIMITY_SENSOR_PROXIMITY_SIGNATURE,
+                PROXIMITY_SENSOR_PROXIMITY_ID,
+                &transfer_id,
+                CANARD_TRANSFER_PRIORITY_LOW,
+                buffer,
+                len); 
+        }
     }
 
     free(proximity_message);
@@ -741,8 +728,6 @@ static void send_NodeStatus(void)
 */
 void CAN_process1HzTasks(void)
 {
-    timestamp_usec += 1000000;
-    uint64_t timestamp_usec = micros64();
     /*
       Purge transfers that are no longer transmitted. This can free up some memory
     */
@@ -771,7 +756,62 @@ void CAN_processTx(void)
     for (txf = NULL; (txf = canardPeekTxQueue(&canard)) != NULL;) {
         // const int16_t tx_res = socketcanTransmit(socketcan, txf, 0);
         // const int16_t tx_res = Can_Transmit_Schedule(txf->id, txf->data, txf->data_len);
-        CANFD_transmitData(txMsgObjHandle, txf->id, CANFD_MCANFrameType_CLASSIC, txf->data_len, txf->data, &errCode);
+        int32_t transmit_status = CANFD_transmitData(txMsgObjHandle, txf->id, CANFD_MCANFrameType_CLASSIC, txf->data_len, txf->data, &errCode);
         canardPopTxQueue(&canard);
+        Task_sleep(1);
     }
+}
+
+void CAN_processRx(void)
+{
+    uint32_t num_pkts;
+    uint32_t pkt_index;
+
+    int32_t             errCode, retVal;
+    uint32_t            id;
+    CANFD_MCANFrameType rxFrameType;
+    CANFD_MCANXidType   rxIdType;
+
+    CanardCANFrame rx_frame;
+
+    MMWave_osalMutexLock(mutexHandle, 10); 
+    num_pkts = gRxPkts;
+    MMWave_osalMutexUnlock(mutexHandle);
+
+    for (pkt_index = 0; pkt_index < num_pkts; pkt_index++) {
+        /* Reset the receive buffer */
+        memset(&rxData, 0, sizeof(rxData));
+        dataLength = 0;
+
+        retVal = CANFD_getData(rxMsgObjHandle, &id, &rxFrameType, &rxIdType, &rxDataLength, &rxData[0], &errCode);
+
+        if (retVal < 0)
+        {
+            CLI_write("Error: CAN receive data for iteration %d failed [Error code %d]\n", iterationCount, errCode);
+            return;
+        }
+
+        if (rxFrameType != frameType)
+        {
+            CLI_write("Error: CAN received incorrect frame type Sent %d Received %d for iteration %d failed\n", frameType, rxFrameType, iterationCount);
+            return;
+        }
+        
+        // Format for Libcanard and forward to canard module
+        rx_frame.id = id | CANARD_CAN_FRAME_EFF;
+        memcpy(&rx_frame.data, &rxData, CANARD_CAN_FRAME_MAX_DATA_LEN);
+        rx_frame.data_len = rxDataLength;
+        rx_frame.iface_id = 0;
+
+        const uint64_t timestamp = micros64();
+
+        uint16_t data_type_id = extractDataType(rx_frame.id);
+
+        int16_t recieve_status = canardHandleRxFrame(&canard, &rx_frame, timestamp);
+        
+        if (data_type_id != UAVCAN_PROTOCOL_NODESTATUS_ID) {
+            CLI_write("Recieved frame of type ID: %d, Status: %d, ID: %d, Length: %d\n", data_type_id, recieve_status, rx_frame.id, rx_frame.data_len);
+        } 
+    }
+    
 }

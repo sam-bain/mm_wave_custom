@@ -15,6 +15,8 @@ void CAN_process1HzTasks(void);
 
 void CAN_processTx(void);
 
+void CAN_processRx(void);
+
 
 
 #endif /*MMW_CAN_H*/
