@@ -3759,7 +3759,7 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
      * Initialize the mmWave SDK components:
      *****************************************************************************/
 
-    /*Initialise the CAN Bus*/
+/*Initialise the CAN Bus*/
     Can_Initialize(gMmwMssMCB.socHandle);
 
     /* Initialize the UART */

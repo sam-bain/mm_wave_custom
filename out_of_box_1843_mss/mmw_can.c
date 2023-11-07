@@ -168,44 +168,12 @@ static void MCANAppInitParams(CANFD_MCANInitParams *mcanCfgParams);
 
 CANFD_Handle       canHandle;
 CANFD_MsgObjHandle txMsgObjHandle;
+CANFD_MsgObjHandle rxMsgObjHandle;
 
 CANFD_MCANMsgObjCfgParams txMsgObjectParams;
 
 
 static uint64_t timestamp_usec = 0;
-
-#define MMWDEMO_HEADER          0x7U
-#define MMWDEMO_PADDING         0x8U
-#define CAN_MESSAGE_MMWDEMO_MAX 0x8U /*(messge type (6) + header (1) + padding(1))*/
-
-#define CAN_MESSAGE_MMWDEMO_HEADER  0xC1
-#define CAN_MESSAGE_MMWDEMO_PADDING 0xB1
-
-#define CAN_MSGOBJ_HEADER  0x7U
-#define CAN_MSGOBJ_PADDING 0x8U
-
-typedef enum mmwDemo_can_message_type_e
-{
-    /*! @brief   List of detected points */
-    CAN_MESSAGE_MMWDEMO_DETECTED_POINTS = 0xD1,
-
-    /*! @brief   Range profile */
-    CAN_MESSAGE_MMWDEMO_RANGE_PROFILE,
-
-    /*! @brief   Noise floor profile */
-    CAN_MESSAGE_MMWDEMO_NOISE_PROFILE,
-
-    /*! @brief   Samples to calculate static azimuth  heatmap */
-    CAN_MESSAGE_MMWDEMO_AZIMUT_STATIC_HEAT_MAP,
-
-    /*! @brief   Range/Doppler detection matrix */
-    CAN_MESSAGE_MMWDEMO_RANGE_DOPPLER_HEAT_MAP,
-
-    /*! @brief   Stats information */
-    CAN_MESSAGE_MMWDEMO_STATS
-} mmwDemo_can_message_type;
-
-
 
 static void onTransferReceived(CanardInstance *ins, CanardRxTransfer *transfer);
 static bool shouldAcceptTransfer(const CanardInstance *ins,
@@ -214,57 +182,6 @@ static bool shouldAcceptTransfer(const CanardInstance *ins,
                                  CanardTransferType transfer_type,
                                  uint8_t source_node_id);
 static uint64_t micros64(void);
-
-
-int32_t Can_Transmit_Schedule(uint32_t msg_id,
-                              const uint8_t *txmsg,
-                              uint32_t len)
-{
-
-    volatile uint32_t index   = 0;
-    int32_t           retVal  = 0;
-    int32_t           errCode = 0;
-
-    // System_printf ("MEssage %x  len %d\n", msg_id, len);
-    if (frameType == CANFD_MCANFrameType_FD)
-    {
-        Task_sleep(1);
-
-        while (len > 64U)
-        {
-            retVal = CANFD_transmitData(txMsgObjHandle, msg_id, CANFD_MCANFrameType_FD, 64U, &txmsg[index], &errCode);
-            index  = index + 64U;
-            len    = len - 64U;
-
-            Task_sleep(1);
-        }
-        retVal = CANFD_transmitData(txMsgObjHandle, msg_id, CANFD_MCANFrameType_FD, len, &txmsg[index], &errCode);
-    }
-    else
-    {
-        while (len > 8U)
-        {
-            retVal = CANFD_transmitData(txMsgObjHandle, msg_id, CANFD_MCANFrameType_CLASSIC, 8U, &txmsg[index], &errCode);
-            if (retVal < 0)
-            {
-                continue;
-            }
-            index = index + 8U;
-            len   = len - 8U;
-        }
-
-        retVal = CANFD_transmitData(txMsgObjHandle, msg_id, CANFD_MCANFrameType_CLASSIC, len, &txmsg[index], &errCode);
-
-        while (retVal < 0)
-        {
-            // System_printf("Debug: Error transmitting CAN data %x , Errcode %x\n", retVal, errCode);
-            retVal = CANFD_transmitData(txMsgObjHandle, msg_id, CANFD_MCANFrameType_CLASSIC, len, &txmsg[index], &errCode);
-        }
-    }
-
-
-    return retVal;
-}
 
 void Can_Initialize(SOC_Handle socHandle)
 {
@@ -281,12 +198,12 @@ void Can_Initialize(SOC_Handle socHandle)
     CANFD_MCANProtocolStatus    protoStatus;
 #endif
     CANFD_MCANMsgObjCfgParams rxMsgObjectParams;
-    CANFD_MsgObjHandle        rxMsgObjHandle[2];
+    
 
     gTxDoneFlag = 0;
     gRxDoneFlag = 0;
 
-    /* Setup the PINMUX to bring out the XWR16xx CAN pins */
+    /* Setup the PINMUX to bring out the XWR18xx CAN pins */
     Pinmux_Set_OverrideCtrl(SOC_XWR18XX_PINE14_PADAE, PINMUX_OUTEN_RETAIN_HW_CTRL, PINMUX_INPEN_RETAIN_HW_CTRL);
     Pinmux_Set_FuncSel(SOC_XWR18XX_PINE14_PADAE, SOC_XWR18XX_PINE14_PADAE_CANFD_TX);
 
@@ -348,7 +265,13 @@ void Can_Initialize(SOC_Handle socHandle)
     mcanBitTimingParams.nomSjw      = 0x1U;
 #endif
 
-#if 1 // 5 Mbps
+#if 1 // 1 Mbps
+    mcanBitTimingParams.dataBrp     = 0x8U;
+    mcanBitTimingParams.dataPropSeg = 0x1U;
+    mcanBitTimingParams.dataPseg1   = 0x2U;
+    mcanBitTimingParams.dataPseg2   = 0x1U;
+    mcanBitTimingParams.dataSjw     = 0x1U;
+#elif 1 // 5 Mbps
     mcanBitTimingParams.dataBrp     = 0x1U;
     mcanBitTimingParams.dataPropSeg = 0x2U;
     mcanBitTimingParams.dataPseg1   = 0x2U;
@@ -389,23 +312,7 @@ void Can_Initialize(SOC_Handle socHandle)
     rxMsgObjectParams.msgIdType     = CANFD_MCANXidType_29_BIT;
     rxMsgObjectParams.msgIdentifier = 0xA1;
 
-    rxMsgObjHandle[0] = CANFD_createMsgObject(canHandle, &rxMsgObjectParams, &errCode);
-    if (rxMsgObjHandle[0] == NULL)
-    {
-        System_printf("Error: CANFD create Rx message object failed [Error code %d]\n", errCode);
-        return;
-    }
-
-    rxMsgObjectParams.direction     = CANFD_Direction_RX;
-    rxMsgObjectParams.msgIdType     = CANFD_MCANXidType_29_BIT;
-    rxMsgObjectParams.msgIdentifier = 0xA2;
-
-    rxMsgObjHandle[1] = CANFD_createMsgObject(canHandle, &rxMsgObjectParams, &errCode);
-    if (rxMsgObjHandle[1] == NULL)
-    {
-        System_printf("Error: CANFD create Rx message object failed [Error code %d]\n", errCode);
-        return;
-    }
+    rxMsgObjHandle = CANFD_createMsgObject(canHandle, &rxMsgObjectParams, &errCode);
 
     /*
      Initializing the Libcanard instance.
@@ -480,8 +387,8 @@ static void MCANAppCallback(CANFD_MsgObjHandle handle, CANFD_Reason reason)
             memset(&rxData, 0, sizeof(rxData));
             dataLength = 0;
 
+            retVal = CANFD_getData(rxMsgObjHandle, &id, &rxFrameType, &rxIdType, &rxDataLength, &rxData[0], &errCode);
 
-            retVal = CANFD_getData(handle, &id, &rxFrameType, &rxIdType, &rxDataLength, &rxData[0], &errCode);
             if (retVal < 0)
             {
                 CLI_write("Error: CAN receive data for iteration %d failed [Error code %d]\n", iterationCount, errCode);
@@ -493,25 +400,23 @@ static void MCANAppCallback(CANFD_MsgObjHandle handle, CANFD_Reason reason)
                 CLI_write("Error: CAN received incorrect frame type Sent %d Received %d for iteration %d failed\n", frameType, rxFrameType, iterationCount);
                 return;
             }
-
-            // Format for Libcanard and forward to canard module
-            rx_frame.id = id;
-            CLI_write("Recieved frame ID: %d\n", id);
-            uint32_t index;
-            CLI_write("Data: ");
-            for (index = 0; index < rxDataLength; index++) {
-                CLI_write("%d ", rxData[index]);
-            }
             
+            // Format for Libcanard and forward to canard module
+            rx_frame.id = id | CANARD_CAN_FRAME_EFF;
             memcpy(&rx_frame.data, &rxData, CANARD_CAN_FRAME_MAX_DATA_LEN);
             rx_frame.data_len = rxDataLength;
+            rx_frame.iface_id = 0;
 
             const uint64_t timestamp = micros64();
 
-            canardHandleRxFrame(&canard, &rx_frame, timestamp);
+            uint16_t data_type_id = extractDataType(rx_frame.id);
 
-
-            /* Validate the data */
+            int16_t recieve_status = canardHandleRxFrame(&canard, &rx_frame, timestamp);
+            
+            if (data_type_id != UAVCAN_PROTOCOL_NODESTATUS_ID) {
+                CLI_write("Recieved frame of type ID: %d, Status: %d, ID: %d, Length: %d\n", data_type_id, recieve_status, rx_frame.id, rx_frame.data_len);
+            } 
+            
 
             gRxPkts++;
             gRxDoneFlag = 1;
@@ -535,8 +440,8 @@ static void MCANAppInitParams(CANFD_MCANInitParams *mcanCfgParams)
     /*Intialize MCAN Config Params*/
     memset(mcanCfgParams, sizeof(CANFD_MCANInitParams), 0);
 
-    mcanCfgParams->fdMode                            = 0x1U;
-    mcanCfgParams->brsEnable                         = 0x1U;
+    mcanCfgParams->fdMode                            = 0x0U;
+    mcanCfgParams->brsEnable                         = 0x0U;
     mcanCfgParams->txpEnable                         = 0x0U;
     mcanCfgParams->efbi                              = 0x0U;
     mcanCfgParams->pxhddisable                       = 0x0U;
@@ -714,8 +619,6 @@ static void getUniqueID(uint8_t id[16])
 */
 static void handle_GetNodeInfo(CanardInstance *ins, CanardRxTransfer *transfer)
 {
-    CLI_write("GetNodeInfo request from %d\n", transfer->source_node_id);
-
     uint8_t buffer[UAVCAN_PROTOCOL_GETNODEINFO_RESPONSE_MAX_SIZE];
     struct uavcan_protocol_GetNodeInfoResponse pkt;
 
@@ -737,20 +640,22 @@ static void handle_GetNodeInfo(CanardInstance *ins, CanardRxTransfer *transfer)
     getUniqueID(pkt.hardware_version.unique_id);
 
     strncpy((char*)pkt.name.data, "RadarNode", sizeof(pkt.name.data));
-    pkt.name.len = 10;
+    pkt.name.len = 9;
     // pkt.name.len = strnlen((char*)pkt.name.data, sizeof(pkt.name.data));
 
     uint16_t total_size = uavcan_protocol_GetNodeInfoResponse_encode(&pkt, buffer);
 
-    canardRequestOrRespond(ins,
-                           transfer->source_node_id,
-                           UAVCAN_PROTOCOL_GETNODEINFO_SIGNATURE,
-                           UAVCAN_PROTOCOL_GETNODEINFO_ID,
-                           &transfer->transfer_id,
-                           transfer->priority,
-                           CanardResponse,
-                           &buffer[0],
-                           total_size);
+    int16_t status = canardRequestOrRespond(ins,
+                                            transfer->source_node_id,
+                                            UAVCAN_PROTOCOL_GETNODEINFO_SIGNATURE,
+                                            UAVCAN_PROTOCOL_GETNODEINFO_ID,
+                                            &transfer->transfer_id,
+                                            transfer->priority,
+                                            CanardResponse,
+                                            &buffer[0],
+                                            total_size);
+                                        
+    CLI_write("Responding to request with status: %d\n", status);
 }
 
 /*
