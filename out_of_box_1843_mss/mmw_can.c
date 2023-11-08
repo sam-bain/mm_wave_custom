@@ -93,7 +93,12 @@ static uint8_t memory_pool[1024];
   need to be a parameter or use dynamic node allocation in a real
   application
  */
-#define MY_NODE_ID 97
+typedef enum sensor_id_e {
+    PROXIMITY_SENSOR_ID_FRONT_RIGHT = 30,
+    PROXIMITY_SENSOR_ID_REAR_LEFT,
+    PROXIMITY_SENSOR_ID_FRONT_LEFT,
+    PROXIMITY_SENSOR_ID_REAR_RIGHT
+} Sensor_id_type;
 
 /*
   hold our node status as a static variable. It will be updated on any errors
@@ -103,13 +108,6 @@ static struct uavcan_protocol_NodeStatus node_status;
 
 
 # define M_PI           3.14159265358979323846 
-
-typedef enum sensor_id_e {
-    PROXIMITY_SENSOR_ID_FRONT_RIGHT,
-    PROXIMITY_SENSOR_ID_REAR_LEFT,
-    PROXIMITY_SENSOR_ID_FRONT_LEFT,
-    PROXIMITY_SENSOR_ID_REAR_RIGHT
-} Sensor_id_type;
 
 /*!
  * @brief
@@ -154,6 +152,8 @@ uint32_t          gDisplayStats  = 0;
 
 rlOsiMutexHdl_t mutexHandle;
 rlInt8_t mutexName[8] = "CAN_lock";
+
+
 
 /**************************************************************************
  *************************** MCAN Global Definitions ***************************
@@ -326,7 +326,10 @@ void Can_Initialize(SOC_Handle socHandle)
                shouldAcceptTransfer,
                NULL);
 
-    canardSetLocalNodeID(&canard, MY_NODE_ID);
+    
+    
+
+    canardSetLocalNodeID(&canard, PROXIMITY_SENSOR_ID_FRONT_RIGHT);
 
     MMWave_osalMutexCreate(&mutexHandle, &mutexName);
 }
@@ -379,48 +382,6 @@ static void MCANAppCallback(CANFD_MsgObjHandle handle, CANFD_Reason reason)
     if (reason == CANFD_Reason_RX)
     {
         {
-            int32_t             errCode, retVal;
-            uint32_t            id;
-            CANFD_MCANFrameType rxFrameType;
-            CANFD_MCANXidType   rxIdType;
-
-            CanardCANFrame rx_frame;
-
-            /* Reset the receive buffer */
-            memset(&rxData, 0, sizeof(rxData));
-            dataLength = 0;
-
-            retVal = CANFD_getData(rxMsgObjHandle, &id, &rxFrameType, &rxIdType, &rxDataLength, &rxData[0], &errCode);
-
-            if (retVal < 0)
-            {
-                CLI_write("Error: CAN receive data for iteration %d failed [Error code %d]\n", iterationCount, errCode);
-                return;
-            }
-
-            if (rxFrameType != frameType)
-            {
-                CLI_write("Error: CAN received incorrect frame type Sent %d Received %d for iteration %d failed\n", frameType, rxFrameType, iterationCount);
-                return;
-            }
-            
-            // Format for Libcanard and forward to canard module
-            rx_frame.id = id | CANARD_CAN_FRAME_EFF;
-            memcpy(&rx_frame.data, &rxData, CANARD_CAN_FRAME_MAX_DATA_LEN);
-            rx_frame.data_len = rxDataLength;
-            rx_frame.iface_id = 0;
-
-            const uint64_t timestamp = micros64();
-
-            uint16_t data_type_id = extractDataType(rx_frame.id);
-
-            int16_t recieve_status = canardHandleRxFrame(&canard, &rx_frame, timestamp);
-            
-            if (data_type_id != UAVCAN_PROTOCOL_NODESTATUS_ID) {
-                CLI_write("Recieved frame of type ID: %d, Status: %d, ID: %d, Length: %d\n", data_type_id, recieve_status, rx_frame.id, rx_frame.data_len);
-            } 
-            
-
             gRxPkts++;
             gRxDoneFlag = 1;
             return;
@@ -588,17 +549,31 @@ static uint64_t micros64(void)
  */
 static void getUniqueID(uint8_t id[16])
 {
-    // memset(id, 0, 16);
-    // FILE *f = fopen("/etc/machine-id", "r");
-    // if (f) {
-    //     fread(id, 1, 16, f);
-    //     fclose(f);
-    // }
-    int index;
-    for (index = 0; index < 15; index++) {
-        id[index] = 0;
-    }
-    id[15] = 30;
+
+    rlRfDieIdCfg_t dieID = { 0 }; //Unique device ID which is embedded in each IWR1843 chip
+
+    rlGetRfDieId(RL_DEVICE_MAP_INTERNAL_BSS, &dieID);
+
+    id[0] = (dieID.lotNo & 0xff000000) >> 24;
+    id[1] = (dieID.lotNo & 0x00ff0000) >> 16;
+    id[2] = (dieID.lotNo & 0x0000ff00) >> 8;
+    id[3] = dieID.lotNo & 0x000000ff;
+    
+    id[4] = (dieID.waferNo & 0xff000000) >> 24;
+    id[5] = (dieID.waferNo & 0x00ff0000) >> 16;
+    id[6] = (dieID.waferNo & 0x0000ff00) >> 8;
+    id[7] = dieID.waferNo & 0x000000ff;
+    
+    id[8] = (dieID.devX & 0xff000000) >> 24;
+    id[9] = (dieID.devX & 0x00ff0000) >> 16;
+    id[10] = (dieID.devX & 0x0000ff00) >> 8;
+    id[11] = dieID.devX & 0x000000ff;
+
+    id[12] = (dieID.devY & 0xff000000) >> 24;
+    id[13] = (dieID.devY & 0x00ff0000) >> 16;
+    id[14] = (dieID.devY & 0x0000ff00) >> 8;
+    id[15] = dieID.devY & 0x000000ff;
+
 }
 
 /*
@@ -774,9 +749,10 @@ void CAN_processRx(void)
 
     CanardCANFrame rx_frame;
 
-    MMWave_osalMutexLock(mutexHandle, 10); 
+    // MMWave_osalMutexLock(mutexHandle, 10); 
     num_pkts = gRxPkts;
-    MMWave_osalMutexUnlock(mutexHandle);
+    gRxPkts = 0;
+    // MMWave_osalMutexUnlock(mutexHandle);
 
     for (pkt_index = 0; pkt_index < num_pkts; pkt_index++) {
         /* Reset the receive buffer */
@@ -805,13 +781,7 @@ void CAN_processRx(void)
 
         const uint64_t timestamp = micros64();
 
-        uint16_t data_type_id = extractDataType(rx_frame.id);
-
         int16_t recieve_status = canardHandleRxFrame(&canard, &rx_frame, timestamp);
-        
-        if (data_type_id != UAVCAN_PROTOCOL_NODESTATUS_ID) {
-            CLI_write("Recieved frame of type ID: %d, Status: %d, ID: %d, Length: %d\n", data_type_id, recieve_status, rx_frame.id, rx_frame.data_len);
-        } 
     }
     
 }
