@@ -109,6 +109,8 @@ static struct uavcan_protocol_NodeStatus node_status;
 
 # define M_PI           3.14159265358979323846 
 
+#define CANARD_ENABLE_TAO 1 //Option to send length of obstacle list in canard CAN frame 
+
 /*!
  * @brief
  *  Message types used in Millimeter Wave Demo for the communication between
@@ -326,12 +328,7 @@ void Can_Initialize(SOC_Handle socHandle)
                shouldAcceptTransfer,
                NULL);
 
-    
-    
-
     canardSetLocalNodeID(&canard, PROXIMITY_SENSOR_ID_FRONT_RIGHT);
-
-    MMWave_osalMutexCreate(&mutexHandle, &mutexName);
 }
 
 /**
@@ -486,7 +483,7 @@ void populate_proximity_message(DPIF_PointCloudCartesian* objPos, struct proximi
  *  @retval
  *      Not Applicable.
  */
-void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, uint32_t numObjOut)
+void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut)
 {
     timestamp_usec += 100000;
 
@@ -519,11 +516,10 @@ void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, uint32_t numObjOut)
                 CANARD_TRANSFER_PRIORITY_LOW,
                 buffer,
                 len); 
-        }
+        }       
     }
 
     free(proximity_message);
-    // free(buffer);
 
 }
 
@@ -731,8 +727,9 @@ void CAN_processTx(void)
     for (txf = NULL; (txf = canardPeekTxQueue(&canard)) != NULL;) {
         // const int16_t tx_res = socketcanTransmit(socketcan, txf, 0);
         // const int16_t tx_res = Can_Transmit_Schedule(txf->id, txf->data, txf->data_len);
-        int32_t transmit_status = CANFD_transmitData(txMsgObjHandle, txf->id, CANFD_MCANFrameType_CLASSIC, txf->data_len, txf->data, &errCode);
+        int32_t transmit_status = CANFD_transmitData(txMsgObjHandle, txf->id, frameType, txf->data_len, txf->data, &errCode);
         canardPopTxQueue(&canard);
+        // CLI_write("Transmitting CAN frame of length %d, status: %d\n", txf->data_len, transmit_status);
         Task_sleep(1);
     }
 }

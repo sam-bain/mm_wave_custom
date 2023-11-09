@@ -9,7 +9,7 @@
 
 void Can_Initialize(SOC_Handle socHandle);
 
-void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, uint32_t numObjOut);
+void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut);
 
 void CAN_process1HzTasks(void);
 

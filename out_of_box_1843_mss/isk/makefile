@@ -20,6 +20,8 @@ ORDERED_OBJS += \
 "./mmwdemo_rfparser.oer4f" \
 "./mss_main.oer4f" \
 "./objdetrangehwa.oer4f" \
+"./dsdlc_generated/src/com.aeronavics.OBSTACLE.oer4f" \
+"./dsdlc_generated/src/com.aeronavics.ProximitySensor.oer4f" \
 "./dsdlc_generated/src/proximity_sensor.Proximity.oer4f" \
 "./dsdlc_generated/src/uavcan.protocol.GetNodeInfo_req.oer4f" \
 "./dsdlc_generated/src/uavcan.protocol.GetNodeInfo_res.oer4f" \
@@ -189,8 +191,8 @@ out_of_box_1843_mss_isk.xer4f: $(OBJS) $(CMD_SRCS) $(GEN_CMDS) C:/mmwave_workspa
 # Other Targets
 clean:
 	-$(RM) $(GEN_FILES__QUOTED)$(EXE_OUTPUTS__QUOTED)
-	-$(RM) "canard.oer4f" "mmw_can.oer4f" "mmw_cli.oer4f" "mmw_lvds_stream.oer4f" "mmwdemo_adcconfig.oer4f" "mmwdemo_flash.oer4f" "mmwdemo_monitor.oer4f" "mmwdemo_rfparser.oer4f" "mss_main.oer4f" "objdetrangehwa.oer4f" "dsdlc_generated\src\proximity_sensor.Proximity.oer4f" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_req.oer4f" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_res.oer4f" "dsdlc_generated\src\uavcan.protocol.HardwareVersion.oer4f" "dsdlc_generated\src\uavcan.protocol.NodeStatus.oer4f" "dsdlc_generated\src\uavcan.protocol.SoftwareVersion.oer4f" 
-	-$(RM) "canard.d" "mmw_can.d" "mmw_cli.d" "mmw_lvds_stream.d" "mmwdemo_adcconfig.d" "mmwdemo_flash.d" "mmwdemo_monitor.d" "mmwdemo_rfparser.d" "mss_main.d" "objdetrangehwa.d" "dsdlc_generated\src\proximity_sensor.Proximity.d" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_req.d" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_res.d" "dsdlc_generated\src\uavcan.protocol.HardwareVersion.d" "dsdlc_generated\src\uavcan.protocol.NodeStatus.d" "dsdlc_generated\src\uavcan.protocol.SoftwareVersion.d" 
+	-$(RM) "canard.oer4f" "mmw_can.oer4f" "mmw_cli.oer4f" "mmw_lvds_stream.oer4f" "mmwdemo_adcconfig.oer4f" "mmwdemo_flash.oer4f" "mmwdemo_monitor.oer4f" "mmwdemo_rfparser.oer4f" "mss_main.oer4f" "objdetrangehwa.oer4f" "dsdlc_generated\src\com.aeronavics.OBSTACLE.oer4f" "dsdlc_generated\src\com.aeronavics.ProximitySensor.oer4f" "dsdlc_generated\src\proximity_sensor.Proximity.oer4f" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_req.oer4f" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_res.oer4f" "dsdlc_generated\src\uavcan.protocol.HardwareVersion.oer4f" "dsdlc_generated\src\uavcan.protocol.NodeStatus.oer4f" "dsdlc_generated\src\uavcan.protocol.SoftwareVersion.oer4f" 
+	-$(RM) "canard.d" "mmw_can.d" "mmw_cli.d" "mmw_lvds_stream.d" "mmwdemo_adcconfig.d" "mmwdemo_flash.d" "mmwdemo_monitor.d" "mmwdemo_rfparser.d" "mss_main.d" "objdetrangehwa.d" "dsdlc_generated\src\com.aeronavics.OBSTACLE.d" "dsdlc_generated\src\com.aeronavics.ProximitySensor.d" "dsdlc_generated\src\proximity_sensor.Proximity.d" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_req.d" "dsdlc_generated\src\uavcan.protocol.GetNodeInfo_res.d" "dsdlc_generated\src\uavcan.protocol.HardwareVersion.d" "dsdlc_generated\src\uavcan.protocol.NodeStatus.d" "dsdlc_generated\src\uavcan.protocol.SoftwareVersion.d" 
 	-$(RMDIR) $(GEN_MISC_DIRS__QUOTED)
 	-@echo 'Finished clean'
 	-@echo ' '

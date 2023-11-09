@@ -1242,7 +1242,7 @@ static void MmwDemo_transmitProcessedOutput
         counter = 0;
     }
 
-    CAN_writeObjData(objOut, result->numObjOut); 
+    CAN_writeObjData(objOut, objOutSideInfo, result->numObjOut); 
     
     CAN_processRx();
     CAN_processTx();

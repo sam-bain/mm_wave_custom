@@ -382,6 +382,8 @@ mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/u
 mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.HardwareVersion.h
 mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.NodeStatus.h
 mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.SoftwareVersion.h
+mmw_can.oer4f: ../dsdlc_generated/include/com.aeronavics.ProximitySensor.h
+mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/com.aeronavics.OBSTACLE.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/time.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/abi_prefix.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/assert.h
@@ -1151,6 +1153,10 @@ C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.
 C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.NodeStatus.h:
 
 C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.SoftwareVersion.h:
+
+../dsdlc_generated/include/com.aeronavics.ProximitySensor.h:
+
+C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/com.aeronavics.OBSTACLE.h:
 
 C:/ti/ti-cgt-arm_16.9.6.LTS/include/time.h:
 

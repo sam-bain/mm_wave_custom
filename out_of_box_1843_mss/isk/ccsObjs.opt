@@ -8,6 +8,8 @@
 "./mmwdemo_rfparser.oer4f"
 "./mss_main.oer4f"
 "./objdetrangehwa.oer4f"
+"./dsdlc_generated/src/com.aeronavics.OBSTACLE.oer4f"
+"./dsdlc_generated/src/com.aeronavics.ProximitySensor.oer4f"
 "./dsdlc_generated/src/proximity_sensor.Proximity.oer4f"
 "./dsdlc_generated/src/uavcan.protocol.GetNodeInfo_req.oer4f"
 "./dsdlc_generated/src/uavcan.protocol.GetNodeInfo_res.oer4f"

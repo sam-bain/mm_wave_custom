@@ -300,9 +300,10 @@ CANARD_INTERNAL uint16_t calculateCRC(const CanardTxTransfer* transfer_object)
 #if CANARD_ENABLE_CANFD
         if (transfer_object->payload_len > 63 && transfer_object->canfd) {
             uint8_t empty = 0;
+            uint8_t i;
             uint8_t padding = (uint8_t)dlcToDataLength(dataLengthToDlc((uint16_t)((transfer_object->payload_len+2) % 63)+1))-1;
             padding -= (uint8_t)((transfer_object->payload_len+2) % 63);
-            for (uint8_t i=0; i<padding; i++) {
+            for (i=0; i<padding; i++) {
                 crc = crcAddByte(crc, empty);
             }
         }
