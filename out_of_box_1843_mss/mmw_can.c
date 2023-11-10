@@ -93,12 +93,12 @@ static uint8_t memory_pool[1024];
   need to be a parameter or use dynamic node allocation in a real
   application
  */
-typedef enum sensor_id_e {
+typedef enum sensor_node_id_e {
     PROXIMITY_SENSOR_ID_FRONT_RIGHT = 30,
     PROXIMITY_SENSOR_ID_REAR_LEFT,
     PROXIMITY_SENSOR_ID_FRONT_LEFT,
     PROXIMITY_SENSOR_ID_REAR_RIGHT
-} Sensor_id_type;
+} Sensor_node_id_type;
 
 /*
   hold our node status as a static variable. It will be updated on any errors
@@ -328,7 +328,7 @@ void Can_Initialize(SOC_Handle socHandle)
                shouldAcceptTransfer,
                NULL);
 
-    canardSetLocalNodeID(&canard, PROXIMITY_SENSOR_ID_FRONT_RIGHT);
+    canardSetLocalNodeID(&canard, PROXIMITY_SENSOR_ID_FRONT_LEFT);
 }
 
 /**
@@ -461,16 +461,20 @@ float wrap_360(const float angle)
     return res;
 }
 
-void populate_proximity_message(DPIF_PointCloudCartesian* objPos, struct proximity_sensor_Proximity* proximity_message) 
+void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, struct com_aeronavics_OBSTACLE* obstacle_message) 
 {
     
     float xy;
-    
+
     xy = sqrt(objPos->x*objPos->x + objPos->y*objPos->y);
 
-    proximity_message->distance = sqrt(xy*xy + objPos->z*objPos->z);
-    proximity_message->yaw = wrap_360(180/M_PI * atan2(objPos->x, objPos->y));
-    proximity_message->pitch = 180/M_PI * (M_PI/2 - atan2(xy, objPos->z));
+    obstacle_message->distance = sqrt(xy*xy + objPos->z*objPos->z);
+    obstacle_message->yaw = wrap_360(180/M_PI * atan2(objPos->x, objPos->y));
+    obstacle_message->pitch = 180/M_PI * (M_PI/2 - atan2(xy, objPos->z));
+
+    // obstacle_message->distance = 1;
+    // obstacle_message->yaw = 2;
+    // obstacle_message->pitch = 3;
 }
 
 /**
@@ -487,37 +491,36 @@ void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo*
 {
     timestamp_usec += 100000;
 
-    int index;
-    struct proximity_sensor_Proximity* proximity_message = malloc(sizeof(struct proximity_sensor_Proximity));
+    uint8_t len;
+    
+    struct com_aeronavics_ProximitySensor* proximity_message = malloc(sizeof(struct com_aeronavics_ProximitySensor));
 
     // we need a static variable for the transfer ID. This is
     // incremeneted on each transfer, allowing for detection of packet
     // loss
     static uint8_t transfer_id;
-    uint32_t len;
+    uint32_t message_len;
 
     // uint8_t* buffer = (uint8_t*) malloc(PROXIMITY_SENSOR_PROXIMITY_MAX_SIZE);
-    uint8_t buffer[PROXIMITY_SENSOR_PROXIMITY_MAX_SIZE];
+    uint8_t buffer[COM_AERONAVICS_PROXIMITYSENSOR_MAX_SIZE];
 
-    if (numObjOut > 0) {
-        proximity_message->sensor_id =    PROXIMITY_SENSOR_ID_FRONT_LEFT;
-        proximity_message->reading_type = PROXIMITY_SENSOR_PROXIMITY_READING_TYPE_GOOD;
-        proximity_message->flags =        0;
+    proximity_message->sensor_id = COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_LEFT;
 
-        for (index = 0; index < numObjOut; index++) {
-            populate_proximity_message(objOut+index, proximity_message);
-            len = proximity_sensor_Proximity_encode(proximity_message, buffer);
+    for (len = 0; len < numObjOut; len++) {
+        populate_obstacle_message(objOut+len, &proximity_message->obstacles.data[len]);    
+    }   
 
-            //Add proximity message to CAN queue
-            canardBroadcast(&canard,
-                PROXIMITY_SENSOR_PROXIMITY_SIGNATURE,
-                PROXIMITY_SENSOR_PROXIMITY_ID,
-                &transfer_id,
-                CANARD_TRANSFER_PRIORITY_LOW,
-                buffer,
-                len); 
-        }       
-    }
+    proximity_message->obstacles.len = len;
+
+    message_len = com_aeronavics_ProximitySensor_encode(proximity_message, buffer);
+    //Add proximity message to CAN queue
+    canardBroadcast(&canard,
+        COM_AERONAVICS_PROXIMITYSENSOR_SIGNATURE,
+        COM_AERONAVICS_PROXIMITYSENSOR_ID,
+        &transfer_id,
+        CANARD_TRANSFER_PRIORITY_LOW,
+        buffer,
+        message_len); 
 
     free(proximity_message);
 
@@ -729,8 +732,7 @@ void CAN_processTx(void)
         // const int16_t tx_res = Can_Transmit_Schedule(txf->id, txf->data, txf->data_len);
         int32_t transmit_status = CANFD_transmitData(txMsgObjHandle, txf->id, frameType, txf->data_len, txf->data, &errCode);
         canardPopTxQueue(&canard);
-        // CLI_write("Transmitting CAN frame of length %d, status: %d\n", txf->data_len, transmit_status);
-        Task_sleep(1);
+        Task_sleep(2);
     }
 }
 
