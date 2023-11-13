@@ -1,4 +1,6 @@
 "./canard.oer4f"
+"./cli_mmwave.oer4f"
+"./hcc_cli.oer4f"
 "./mmw_can.oer4f"
 "./mmw_cli.oer4f"
 "./mmw_lvds_stream.oer4f"
@@ -35,7 +37,6 @@
 -llibadcbuf_xwr18xx.aer4f
 -llibdma_xwr18xx.aer4f
 -llibedma_xwr18xx.aer4f
--llibcli_xwr18xx.aer4f
 -llibhwa_xwr18xx.aer4f
 -llibdpm_xwr18xx.aer4f
 -llibmathutils.aer4f

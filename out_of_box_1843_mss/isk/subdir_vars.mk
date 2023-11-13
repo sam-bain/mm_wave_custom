@@ -14,6 +14,8 @@ CMD_SRCS += \
 
 C_SRCS += \
 ../canard.c \
+../cli_mmwave.c \
+../hcc_cli.c \
 ../mmw_can.c \
 ../mmw_cli.c \
 ../mmw_lvds_stream.c \
@@ -36,6 +38,8 @@ GEN_MISC_DIRS += \
 
 C_DEPS += \
 ./canard.d \
+./cli_mmwave.d \
+./hcc_cli.d \
 ./mmw_can.d \
 ./mmw_cli.d \
 ./mmw_lvds_stream.d \
@@ -51,6 +55,8 @@ GEN_OPTS += \
 
 OBJS += \
 ./canard.oer4f \
+./cli_mmwave.oer4f \
+./hcc_cli.oer4f \
 ./mmw_can.oer4f \
 ./mmw_cli.oer4f \
 ./mmw_lvds_stream.oer4f \
@@ -66,6 +72,8 @@ GEN_MISC_DIRS__QUOTED += \
 
 OBJS__QUOTED += \
 "canard.oer4f" \
+"cli_mmwave.oer4f" \
+"hcc_cli.oer4f" \
 "mmw_can.oer4f" \
 "mmw_cli.oer4f" \
 "mmw_lvds_stream.oer4f" \
@@ -78,6 +86,8 @@ OBJS__QUOTED += \
 
 C_DEPS__QUOTED += \
 "canard.d" \
+"cli_mmwave.d" \
+"hcc_cli.d" \
 "mmw_can.d" \
 "mmw_cli.d" \
 "mmw_lvds_stream.d" \
@@ -94,6 +104,8 @@ GEN_FILES__QUOTED += \
 
 C_SRCS__QUOTED += \
 "../canard.c" \
+"../cli_mmwave.c" \
+"../hcc_cli.c" \
 "../mmw_can.c" \
 "../mmw_cli.c" \
 "../mmw_lvds_stream.c" \

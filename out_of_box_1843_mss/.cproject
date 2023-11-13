@@ -112,7 +112,6 @@
 									<listOptionValue builtIn="false" value="${COM_TI_MMWAVE_SDK_INSTALL_DIR}/packages/ti/drivers/canfd/lib"/>
 									<listOptionValue builtIn="false" value="${COM_TI_MMWAVE_SDK_INSTALL_DIR}/packages/ti/drivers/qspi/lib"/>
 									<listOptionValue builtIn="false" value="${COM_TI_MMWAVE_SDK_INSTALL_DIR}/packages/ti/drivers/qspiflash/lib"/>
-									<listOptionValue builtIn="false" value="${COM_TI_MMWAVE_SDK_INSTALL_DIR}/packages/ti/utils/cli/lib"/>
 									<listOptionValue builtIn="false" value="${COM_TI_MMWAVE_SDK_INSTALL_DIR}/packages/ti/utils/mathutils/lib"/>
 									<listOptionValue builtIn="false" value="${COM_TI_MMWAVE_SDK_INSTALL_DIR}/packages/ti/datapath/dpu/rangeproc/lib"/>
 									<listOptionValue builtIn="false" value="${COM_TI_MMWAVE_SDK_INSTALL_DIR}/packages/ti/datapath/dpedma/lib"/>
@@ -141,7 +140,6 @@
 									<listOptionValue builtIn="false" value="libadcbuf_xwr18xx.aer4f"/>
 									<listOptionValue builtIn="false" value="libdma_xwr18xx.aer4f"/>
 									<listOptionValue builtIn="false" value="libedma_xwr18xx.aer4f"/>
-									<listOptionValue builtIn="false" value="libcli_xwr18xx.aer4f"/>
 									<listOptionValue builtIn="false" value="libhwa_xwr18xx.aer4f"/>
 									<listOptionValue builtIn="false" value="libdpm_xwr18xx.aer4f"/>
 									<listOptionValue builtIn="false" value="libmathutils.aer4f"/>

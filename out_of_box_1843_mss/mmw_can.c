@@ -93,13 +93,8 @@ static uint8_t memory_pool[1024];
   need to be a parameter or use dynamic node allocation in a real
   application
  */
-typedef enum sensor_node_id_e {
-    PROXIMITY_SENSOR_ID_FRONT_RIGHT = 30,
-    PROXIMITY_SENSOR_ID_REAR_LEFT,
-    PROXIMITY_SENSOR_ID_FRONT_LEFT,
-    PROXIMITY_SENSOR_ID_REAR_RIGHT
-} Sensor_node_id_type;
 
+#define PROXIMITY_SENSOR_NODE_ID_BASE 30
 /*
   hold our node status as a static variable. It will be updated on any errors
  */
@@ -328,7 +323,7 @@ void Can_Initialize(SOC_Handle socHandle)
                shouldAcceptTransfer,
                NULL);
 
-    canardSetLocalNodeID(&canard, PROXIMITY_SENSOR_ID_FRONT_LEFT);
+    canardSetLocalNodeID(&canard, PROXIMITY_SENSOR_NODE_ID_BASE + COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_LEFT);
 }
 
 /**
