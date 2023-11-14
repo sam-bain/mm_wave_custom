@@ -106,8 +106,9 @@ static struct uavcan_protocol_NodeStatus node_status;
 
 #define CANARD_ENABLE_TAO 1 //Option to send length of obstacle list in canard CAN frame
 
-const float radar_angles[4] = {52.3, 0, -52.3, 0}; //The angle of each of the radars on the drone (CCW +ve, 0 = straight ahead). Order is defined by standard X4 motor order {FR, RL, FL, RR}
-const float radar_pos[4][3] = {{0.271,  0.311, 0.18}, //The position of the front right radar on the drone {x, y, z} [m]
+const float radar_angles[5] = {0, 52.3, 0, -52.3, 0}; //The angle of each of the radars on the drone (CCW +ve, 0 = straight ahead). Order is defined by standard X4 motor order {UNDEFINED, FR, RL, FL, RR}
+const float radar_pos[5][3] = {{    0,      0,    0}, //For undefined radar position, don't translate
+                               {0.271,  0.311, 0.18}, //The position of the front right radar on the drone {x, y, z} [m]
                                {    0,      0,    0}, //The position of the rear left radar on the drone {x, y, z} [m]
                                {0.271, -0.311, 0.18}, //The position of the front left radar on the drone {x, y, z} [m]
                                {    0,      0,    0}}; //The position of the rear right radar on the drone {x, y, z} [m]
@@ -480,11 +481,9 @@ void coordinate_transform(DPIF_PointCloudCartesian* objPos, const uint8_t sensor
 
 void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, const uint8_t sensor_orientation, struct com_aeronavics_OBSTACLE* obstacle_message) 
 {
-    if (sensor_orientation != COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_UNDEFINED) {        
-        coordinate_transform(objPos, sensor_orientation); 
-    } 
+    float xy;     
 
-    float xy;
+    coordinate_transform(objPos, sensor_orientation); 
 
     xy = sqrt(objPos->x*objPos->x + objPos->y*objPos->y);
 
