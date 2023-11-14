@@ -104,38 +104,7 @@ static struct uavcan_protocol_NodeStatus node_status;
 
 # define M_PI           3.14159265358979323846 
 
-#define CANARD_ENABLE_TAO 1 //Option to send length of obstacle list in canard CAN frame 
-
-/*!
- * @brief
- *  Message types used in Millimeter Wave Demo for the communication between
- *  target and host, and also for Mailbox communication
- *  between MSS and DSS on the XWR16xx platform. Message types are used to indicate
- *  different type detection information sent out from the target.
- *
- */
-typedef enum MmwDemo_output_message_type_e
-{
-    /*! @brief   List of detected points */
-    MMWDEMO_OUTPUT_MSG_DETECTED_POINTS = 1,
-
-    /*! @brief   Range profile */
-    MMWDEMO_OUTPUT_MSG_RANGE_PROFILE,
-
-    /*! @brief   Noise floor profile */
-    MMWDEMO_OUTPUT_MSG_NOISE_PROFILE,
-
-    /*! @brief   Samples to calculate static azimuth  heatmap */
-    MMWDEMO_OUTPUT_MSG_AZIMUT_STATIC_HEAT_MAP,
-
-    /*! @brief   Range/Doppler detection matrix */
-    MMWDEMO_OUTPUT_MSG_RANGE_DOPPLER_HEAT_MAP,
-
-    /*! @brief   Stats information */
-    MMWDEMO_OUTPUT_MSG_STATS,
-
-    MMWDEMO_OUTPUT_MSG_MAX
-} MmwDemo_output_message_type;
+#define CANARD_ENABLE_TAO 1 //Option to send length of obstacle list in canard CAN frame
 
 const float radar_angles[4] = {52.3, 0, -52.3, 0}; //The angle of each of the radars on the drone (CCW +ve, 0 = straight ahead). Order is defined by standard X4 motor order {FR, RL, FL, RR}
 const float radar_pos[4][3] = {{0.271,  0.311, 0.18}, //The position of the front right radar on the drone {x, y, z} [m]
@@ -152,11 +121,6 @@ volatile uint32_t iterationCount = 0U;
 uint32_t          dataLength     = 0U;
 uint32_t          msgLstErrCnt   = 0U;
 uint32_t          gDisplayStats  = 0;
-
-rlOsiMutexHdl_t mutexHandle;
-rlInt8_t mutexName[8] = "CAN_lock";
-
-
 
 /**************************************************************************
  *************************** MCAN Global Definitions ***************************

@@ -1205,33 +1205,13 @@ static void MmwDemo_transmitProcessedOutput
     MmwDemo_output_message_stats        *timingInfo
 )
 {
-    MmwDemo_output_message_header header;
-    MmwDemo_GuiMonSel   *pGuiMonSel;
-    MmwDemo_SubFrameCfg *subFrameCfg;
-    uint32_t tlvIdx = 0;
-    uint32_t index;
-    uint32_t orientation;
-    uint32_t numPaddingBytes;
-    uint32_t packetLen;
-    uint8_t padding[MMWDEMO_OUTPUT_MSG_SEGMENT_LEN];
-    MmwDemo_output_message_tl   tl[MMWDEMO_OUTPUT_MSG_MAX];
     int32_t errCode;
     uint16_t *detMatrix = (uint16_t *)result->detMatrix.data;
     DPIF_PointCloudCartesian *objOut;
-    cmplx16ImRe_t *azimuthStaticHeatMap;
     DPIF_PointCloudSideInfo *objOutSideInfo;
     DPC_ObjectDetection_Stats *stats;
 
     static int counter = 0;
-    
-    /* Get subframe configuration */
-    subFrameCfg = &gMmwMssMCB.subFrameCfg[result->subFrameIdx];
-
-    /* Get Gui Monitor configuration */
-    pGuiMonSel = &subFrameCfg->guiMonSel;
-
-    /* Clear message header */
-    memset((void *)&header, 0, sizeof(MmwDemo_output_message_header));
 
     /******************************************************************
        Send out data that is enabled, Since processing results are from DSP,
@@ -1277,240 +1257,6 @@ static void MmwDemo_transmitProcessedOutput
     
     CAN_processRx();
     CAN_processTx();
-
-//     /* Header: */
-//     header.platform =  0xA1843;
-//     header.magicWord[0] = 0x0102;
-//     header.magicWord[1] = 0x0304;
-//     header.magicWord[2] = 0x0506;
-//     header.magicWord[3] = 0x0708;
-//     header.numDetectedObj = result->numObjOut;
-//     header.version =    MMWAVE_SDK_VERSION_BUILD |
-//                         (MMWAVE_SDK_VERSION_BUGFIX << 8) |
-//                         (MMWAVE_SDK_VERSION_MINOR << 16) |
-//                         (MMWAVE_SDK_VERSION_MAJOR << 24);
-
-//     packetLen = sizeof(MmwDemo_output_message_header);
-//     if ((pGuiMonSel->detectedObjects == 1) || (pGuiMonSel->detectedObjects == 2) &&
-//          (result->numObjOut > 0))
-//     {
-//         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_DETECTED_POINTS;
-//         tl[tlvIdx].length = sizeof(DPIF_PointCloudCartesian) * result->numObjOut;
-//         packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
-//         tlvIdx++;
-//     }
-//     /* Side info */
-//     if ((pGuiMonSel->detectedObjects == 1) && (result->numObjOut > 0))
-//     {
-//         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_DETECTED_POINTS_SIDE_INFO;
-//         tl[tlvIdx].length = sizeof(DPIF_PointCloudSideInfo) * result->numObjOut;
-//         packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
-//         tlvIdx++;
-//     }
-//     // /*Cluster Info*/
-//     // if ((pGuiMonSel->detectedObjects == 1) && (result->numObjOut > 0))
-//     // {
-//     //     tl[tlvIdx].type = 5;
-//     //     tl[tlvIdx].length = sizeof(uint8_t) * 5;
-//     //     packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
-//     //     tlvIdx++;
-//     // }
-//     if (pGuiMonSel->logMagRange)
-//     {
-//         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_RANGE_PROFILE;
-//         tl[tlvIdx].length = sizeof(uint16_t) * subFrameCfg->numRangeBins;
-//         packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
-//         tlvIdx++;
-//     }
-//     if (pGuiMonSel->noiseProfile)
-//     {
-//         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_NOISE_PROFILE;
-//         tl[tlvIdx].length = sizeof(uint16_t) * subFrameCfg->numRangeBins;
-//         packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
-//         tlvIdx++;
-//     }
-//     if (pGuiMonSel->rangeAzimuthHeatMap)
-//     {
-// #if defined(USE_2D_AOA_DPU)
-//         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_AZIMUT_ELEVATION_STATIC_HEAT_MAP;
-// #else
-//         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_AZIMUT_STATIC_HEAT_MAP;
-// #endif
-//         tl[tlvIdx].length = result->azimuthStaticHeatMapSize * sizeof(cmplx16ImRe_t);
-//         packetLen += sizeof(MmwDemo_output_message_tl) +  tl[tlvIdx].length;
-//         tlvIdx++;
-//     }
-//     if (pGuiMonSel->rangeDopplerHeatMap)
-//     {
-//         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_RANGE_DOPPLER_HEAT_MAP;
-//         tl[tlvIdx].length = subFrameCfg->numRangeBins * subFrameCfg->numDopplerBins * sizeof(uint16_t);
-//         packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
-//         tlvIdx++;
-//     }
-//     if (pGuiMonSel->statsInfo)
-//     {
-//         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_STATS;
-//         tl[tlvIdx].length = sizeof(MmwDemo_output_message_stats);
-//         packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
-//         tlvIdx++;
-
-//         MmwDemo_getTemperatureReport();
-//         tl[tlvIdx].type = MMWDEMO_OUTPUT_MSG_TEMPERATURE_STATS;
-//         tl[tlvIdx].length = sizeof(MmwDemo_temperatureStats);
-//         packetLen += sizeof(MmwDemo_output_message_tl) + tl[tlvIdx].length;
-//         tlvIdx++;
-//     }
-
-//     header.numTLVs = tlvIdx;
-//     /* Round up packet length to multiple of MMWDEMO_OUTPUT_MSG_SEGMENT_LEN */
-//     header.totalPacketLen = MMWDEMO_OUTPUT_MSG_SEGMENT_LEN *
-//             ((packetLen + (MMWDEMO_OUTPUT_MSG_SEGMENT_LEN-1))/MMWDEMO_OUTPUT_MSG_SEGMENT_LEN);
-//     header.timeCpuCycles = Pmu_getCount(0);
-//     header.frameNumber = stats->frameStartIntCounter;
-//     header.subFrameNumber = result->subFrameIdx;
-
-//     UART_writePolling (uartHandle,
-//                        (uint8_t*)&header,
-//                        sizeof(MmwDemo_output_message_header));
-
-
-//     tlvIdx = 0;
-//     /* Send detected Objects */
-//     if ((pGuiMonSel->detectedObjects == 1) || (pGuiMonSel->detectedObjects == 2) &&
-//         (result->numObjOut > 0))
-//     {
-//         UART_writePolling (uartHandle,
-//                            (uint8_t*)&tl[tlvIdx],
-//                            sizeof(MmwDemo_output_message_tl));
-
-//         /*Send array of objects */
-//         UART_writePolling (uartHandle, (uint8_t*)objOut,
-//                            sizeof(DPIF_PointCloudCartesian) * result->numObjOut);
-//         tlvIdx++;
-//     }
-
-//     /* Send detected Objects Side Info */
-//     if ((pGuiMonSel->detectedObjects == 1) && (result->numObjOut > 0))
-//     {
-
-//         UART_writePolling (uartHandle,
-//                            (uint8_t*)&tl[tlvIdx],
-//                            sizeof(MmwDemo_output_message_tl));
-
-//         UART_writePolling (uartHandle, (uint8_t*)objOutSideInfo,
-//                            sizeof(DPIF_PointCloudSideInfo) * result->numObjOut);
-//         tlvIdx++;
-//     }
-
-//     // uint8_t objOutClusterInfo[5] = {1, 2, 3, 4, 5};
-//     // /* Send detected Objects Cluster Info */
-//     // if ((pGuiMonSel->detectedObjects == 1) && (result->numObjOut > 0))
-//     // {
-
-//     //     UART_writePolling (uartHandle,
-//     //                        (uint8_t*)&tl[tlvIdx],
-//     //                        sizeof(MmwDemo_output_message_tl));
-
-//     //     UART_writePolling (uartHandle, (uint8_t*)objOutClusterInfo,
-//     //                        sizeof(uint8_t) * 5);
-//     //     tlvIdx++;
-//     // }
-    
-
-//     /* Send Range profile */
-//     if (pGuiMonSel->logMagRange)
-//     {
-//         UART_writePolling (uartHandle,
-//                            (uint8_t*)&tl[tlvIdx],
-//                            sizeof(MmwDemo_output_message_tl));
-
-//         for(index = 0; index < subFrameCfg->numRangeBins; index++)
-//         {
-//             UART_writePolling (uartHandle,
-//                     (uint8_t*)&detMatrix[index*subFrameCfg->numDopplerBins],
-//                     sizeof(uint16_t));
-//         }
-//         tlvIdx++;
-//     }
-
-//     /* Send noise profile */
-//     if (pGuiMonSel->noiseProfile)
-//     {
-//         uint32_t maxDopIdx = subFrameCfg->numDopplerBins/2 -1;
-//         UART_writePolling (uartHandle,
-//                            (uint8_t*)&tl[tlvIdx],
-//                            sizeof(MmwDemo_output_message_tl));
-
-//         for(index = 0; index < subFrameCfg->numRangeBins; index++)
-//         {
-//             UART_writePolling (uartHandle,
-//                     (uint8_t*)&detMatrix[index*subFrameCfg->numDopplerBins + maxDopIdx],
-//                     sizeof(uint16_t));
-//         }
-//         tlvIdx++;
-//     }
-
-//     /* Send data for static azimuth heatmap */
-//     if (pGuiMonSel->rangeAzimuthHeatMap)
-//     {
-//         azimuthStaticHeatMap = (cmplx16ImRe_t *) SOC_translateAddress((uint32_t)result->azimuthStaticHeatMap,
-//                                                      SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
-//                                                      &errCode);
-//         DebugP_assert ((uint32_t)azimuthStaticHeatMap!= SOC_TRANSLATEADDR_INVALID);
-
-//         UART_writePolling (uartHandle,
-//                            (uint8_t*)&tl[tlvIdx],
-//                            sizeof(MmwDemo_output_message_tl));
-
-//         UART_writePolling (uartHandle,
-//                 (uint8_t *)azimuthStaticHeatMap,
-//                 result->azimuthStaticHeatMapSize * sizeof(cmplx16ImRe_t));
-
-//         tlvIdx++;
-//     }
-
-//     /* Send data for range/Doppler heatmap */
-//     if (pGuiMonSel->rangeDopplerHeatMap == 1)
-//     {
-//         UART_writePolling (uartHandle,
-//                            (uint8_t*)&tl[tlvIdx],
-//                            sizeof(MmwDemo_output_message_tl));
-
-//         UART_writePolling (uartHandle,
-//                 (uint8_t*)detMatrix,
-//                 tl[tlvIdx].length);
-//         tlvIdx++;
-//     }
-
-//     /* Send stats information */
-//     if (pGuiMonSel->statsInfo == 1)
-//     {
-//         UART_writePolling (uartHandle,
-//                            (uint8_t*)&tl[tlvIdx],
-//                            sizeof(MmwDemo_output_message_tl));
-
-//         /* Address translation is done when buffer is received*/
-//         UART_writePolling (uartHandle,
-//                            (uint8_t*)timingInfo,
-//                            tl[tlvIdx].length);
-//         tlvIdx++;
-//         UART_writePolling (uartHandle,
-//                            (uint8_t*)&tl[tlvIdx],
-//                            sizeof(MmwDemo_output_message_tl));
-//         UART_writePolling (uartHandle,
-//                            (uint8_t*)&gMmwMssMCB.temperatureStats,
-//                            tl[tlvIdx].length);
-//         tlvIdx++;
-//     }
-
-//     /* Send padding bytes */
-//     numPaddingBytes = MMWDEMO_OUTPUT_MSG_SEGMENT_LEN - (packetLen & (MMWDEMO_OUTPUT_MSG_SEGMENT_LEN-1));
-//     if (numPaddingBytes<MMWDEMO_OUTPUT_MSG_SEGMENT_LEN)
-//     {
-//         UART_writePolling (uartHandle,
-//                             (uint8_t*)padding,
-//                             numPaddingBytes);
-//     }
 
 }
 
@@ -2096,12 +1842,7 @@ static void MmwDemo_dataPathStop (void)
 const rlGpAdcCfg_t gpAdcCfg =
 {
     .enable = 0x02, //Only enable adc2
-    // .numOfSamples[0].sampleCnt = 0x20,
     .numOfSamples[1].sampleCnt = 0x20,
-    // .numOfSamples[2].sampleCnt = 0x20,
-    // .numOfSamples[3].sampleCnt = 0x20,
-    // .numOfSamples[4].sampleCnt = 0x20,
-    // .numOfSamples[5].sampleCnt = 0x20,
     .reserved0 = 0
 };
 
