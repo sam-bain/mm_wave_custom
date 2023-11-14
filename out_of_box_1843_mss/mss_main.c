@@ -655,6 +655,7 @@
 #define MMWDEMO_CLI_TASK_PRIORITY                 3
 #define MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY      4
 #define MMWDEMO_MMWAVE_CTRL_TASK_PRIORITY         5
+#define CAN_1HZ_TASK_PRIORITY                     3
 
 #if (MMWDEMO_CLI_TASK_PRIORITY >= MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY)
 #error CLI task priority must be < Object Detection DPM task priority
@@ -1153,7 +1154,15 @@ void get_sensor_orientation()
     
 }
 
+static void MmwDemo_CAN1HzTask(UArg arg0, UArg arg1)
+{
 
+    while (1)
+    {
+        CAN_process1HzTasks();
+        Task_sleep(1000); //Sleep for a second
+    }
+}
 
 /**************************************************************************
  ******************** Millimeter Wave Demo Results Transmit Functions *************
@@ -1211,8 +1220,6 @@ static void MmwDemo_transmitProcessedOutput
     DPIF_PointCloudSideInfo *objOutSideInfo;
     DPC_ObjectDetection_Stats *stats;
 
-    static int counter = 0;
-
     /******************************************************************
        Send out data that is enabled, Since processing results are from DSP,
        address translation is needed for buffer pointers
@@ -1243,14 +1250,6 @@ static void MmwDemo_transmitProcessedOutput
                                                      SOC_TranslateAddr_Dir_FROM_OTHER_CPU,
                                                      &errCode);
         DebugP_assert ((uint32_t) result->radarCube.data!= SOC_TRANSLATEADDR_INVALID);
-    }
-
-    
-
-    counter++;
-    if (counter >= 10) { //TO CHANGE: Need to set up so happens at 1Hz regardless of frame rate
-        CAN_process1HzTasks();
-        counter = 0;
     }
 
     CAN_writeObjData(objOut, objOutSideInfo, result->numObjOut, sensor_orientation); 
@@ -3763,6 +3762,14 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     taskParams.priority  = MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY;
     taskParams.stackSize = 4*1024;
     gMmwMssMCB.taskHandles.objDetDpmTask = Task_create(mmwDemo_mssDPMTask, &taskParams, NULL);
+
+    /*****************************************************************************
+     * Launch the CAN 1Hz node status task
+     *****************************************************************************/
+    Task_Params_init(&taskParams);
+    taskParams.priority  = CAN_1HZ_TASK_PRIORITY;
+    taskParams.stackSize = 3*1024;
+    gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_CAN1HzTask, &taskParams, NULL);
 
     /* Calibration save/restore initialization */
     if(MmwDemo_calibInit()<0)
