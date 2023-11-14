@@ -9,7 +9,9 @@
 
 void Can_Initialize(SOC_Handle socHandle);
 
-void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut);
+void Canard_Initialize(uint8_t sensor_orientation);
+
+void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut, const uint8_t sensor_orientation);
 
 void CAN_process1HzTasks(void);
 

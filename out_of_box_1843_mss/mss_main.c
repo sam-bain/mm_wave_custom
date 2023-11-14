@@ -636,6 +636,7 @@
 
 /*Custom Include Files*/
 #include "mmw_can.h"
+#include "dsdlc_generated/include/dronecan_msgs.h"
 
 #ifdef SYS_COMMON_RTRIM_MODIFY_EN
 #include <ti/utils/rtrim/rtrimutils.h>
@@ -674,6 +675,16 @@
 /**************************************************************************
  *************************** Global Definitions ***************************
  **************************************************************************/
+
+rlUInt8_t isGetGpAdcMeasData = 0U;
+/* received GPAdc Data over Async Event */
+rlRecvdGpAdcData_t rcvGpAdcData = {0};
+
+uint8_t sensor_orientation;
+                                          //                                          ADC_2  
+#define SENSOR_ORIENTATION_FL_ADC_MIN 900 //ADC value for voltage divider  3V3<--120R---^---120R-->GND is 938 for 10 bit ADC with range 0 - 1.8V.
+                                          //                                          ADC_2 
+#define SENSOR_ORIENTATION_FR_ADC_MIN 500 //ADC value for voltage divider  3V3<--240R---^---120R-->GND is 625 for 10 bit ADC with range 0 - 1.8V.
 
 /**
  * @brief
@@ -1126,6 +1137,23 @@ void MmwDemo_getTemperatureReport()
 }
 
 
+void get_sensor_orientation()
+{
+    /*Function that reads from ADC2, and determines the orientation of the sensor based on the value from
+    * the ADC. The ADC pin is connected to a voltage divider between a resistor on the radar board and a 
+    * resistor on the aircraft carrier board, which is different for each connector.
+    */
+    if (rcvGpAdcData.sensor[1].avg > SENSOR_ORIENTATION_FL_ADC_MIN) {
+        sensor_orientation = COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_LEFT;
+    } else if (rcvGpAdcData.sensor[1].avg > SENSOR_ORIENTATION_FR_ADC_MIN) {
+        sensor_orientation = COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_RIGHT;
+    } else {
+        sensor_orientation = COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_UNDEFINED;
+    }
+    
+}
+
+
 
 /**************************************************************************
  ******************** Millimeter Wave Demo Results Transmit Functions *************
@@ -1182,6 +1210,7 @@ static void MmwDemo_transmitProcessedOutput
     MmwDemo_SubFrameCfg *subFrameCfg;
     uint32_t tlvIdx = 0;
     uint32_t index;
+    uint32_t orientation;
     uint32_t numPaddingBytes;
     uint32_t packetLen;
     uint8_t padding[MMWDEMO_OUTPUT_MSG_SEGMENT_LEN];
@@ -1236,13 +1265,15 @@ static void MmwDemo_transmitProcessedOutput
         DebugP_assert ((uint32_t) result->radarCube.data!= SOC_TRANSLATEADDR_INVALID);
     }
 
+    
+
     counter++;
     if (counter >= 10) { //TO CHANGE: Need to set up so happens at 1Hz regardless of frame rate
         CAN_process1HzTasks();
         counter = 0;
     }
 
-    CAN_writeObjData(objOut, objOutSideInfo, result->numObjOut); 
+    CAN_writeObjData(objOut, objOutSideInfo, result->numObjOut, sensor_orientation); 
     
     CAN_processRx();
     CAN_processTx();
@@ -2062,6 +2093,42 @@ static void MmwDemo_dataPathStop (void)
     }
 }
 
+const rlGpAdcCfg_t gpAdcCfg =
+{
+    .enable = 0x02, //Only enable adc2
+    // .numOfSamples[0].sampleCnt = 0x20,
+    .numOfSamples[1].sampleCnt = 0x20,
+    // .numOfSamples[2].sampleCnt = 0x20,
+    // .numOfSamples[3].sampleCnt = 0x20,
+    // .numOfSamples[4].sampleCnt = 0x20,
+    // .numOfSamples[5].sampleCnt = 0x20,
+    .reserved0 = 0
+};
+
+int32_t MmwaveLink_setGpAdcConfig (void)
+{
+    int32_t         retVal;
+    
+    retVal = rlSetGpAdcConfig(RL_DEVICE_MAP_INTERNAL_BSS, (rlGpAdcCfg_t*)&gpAdcCfg);
+
+    /* Check for mmWaveLink API call status */
+    if(retVal != 0)
+    {
+        /* Error: Link reported an issue. */
+        System_printf("Error: rlSetGpAdcConfig retVal=%d\n", retVal);
+        return -1;
+    }
+    
+    System_printf("Debug: Finished rlSetGpAdcConfig\n");
+    
+    while(isGetGpAdcMeasData == 0U)
+    {
+        /* Sleep and poll again: */
+        Task_sleep(1);
+    }
+    return 0;
+}
+
 /**
  *  @b Description
  *  @n
@@ -2141,6 +2208,12 @@ static int32_t MmwDemo_eventCallbackFxn(uint16_t msgId, uint16_t sbId, uint16_t 
                     DebugP_log0("App: BSS stop (frame end) received\n");
 
                     MmwDemo_dataPathStop();
+                    break;
+                }
+                case RL_RF_AE_GPADC_MEAS_DATA_SB:
+                {
+                    isGetGpAdcMeasData = 1U;
+                    memcpy(&rcvGpAdcData, payload, sizeof(rlRecvdGpAdcData_t));
                     break;
                 }
                 default:
@@ -3966,6 +4039,23 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
      * Initialize the CLI Module:
      *****************************************************************************/
     MmwDemo_CLIInit(MMWDEMO_CLI_TASK_PRIORITY);
+
+    if (MmwaveLink_setGpAdcConfig() < 0)
+    {
+        CLI_write ("Chris Error: MmwaveLink_setGpAdcConfig\n");
+    }
+
+    get_sensor_orientation();
+
+    if (sensor_orientation == COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_LEFT) {
+        CLI_write("Sensor Orientation: Front Left\n");
+    } else if (sensor_orientation == COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_RIGHT){
+        CLI_write("Sensor Orientation: Front Right\n");
+    } else {
+        CLI_write("Sensor Orientation: Undefined\n");
+    }
+    
+    Canard_Initialize(sensor_orientation);
 
     return;
 }

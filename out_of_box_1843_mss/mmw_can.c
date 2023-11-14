@@ -137,6 +137,12 @@ typedef enum MmwDemo_output_message_type_e
     MMWDEMO_OUTPUT_MSG_MAX
 } MmwDemo_output_message_type;
 
+const float radar_angles[4] = {52.3, 0, -52.3, 0}; //The angle of each of the radars on the drone (CCW +ve, 0 = straight ahead). Order is defined by standard X4 motor order {FR, RL, FL, RR}
+const float radar_pos[4][3] = {{0.271,  0.311, 0.18}, //The position of the front right radar on the drone {x, y, z} [m]
+                               {    0,      0,    0}, //The position of the rear left radar on the drone {x, y, z} [m]
+                               {0.271, -0.311, 0.18}, //The position of the front left radar on the drone {x, y, z} [m]
+                               {    0,      0,    0}}; //The position of the rear right radar on the drone {x, y, z} [m]
+
 /**************************************************************************
  *************************** Global Definitions ***************************
  **************************************************************************/
@@ -313,6 +319,10 @@ void Can_Initialize(SOC_Handle socHandle)
 
     rxMsgObjHandle = CANFD_createMsgObject(canHandle, &rxMsgObjectParams, &errCode);
 
+
+}
+
+void Canard_Initialize(uint8_t sensor_orientation) {
     /*
      Initializing the Libcanard instance.
      */
@@ -323,7 +333,7 @@ void Can_Initialize(SOC_Handle socHandle)
                shouldAcceptTransfer,
                NULL);
 
-    canardSetLocalNodeID(&canard, PROXIMITY_SENSOR_NODE_ID_BASE + COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_LEFT);
+    canardSetLocalNodeID(&canard, PROXIMITY_SENSOR_NODE_ID_BASE + sensor_orientation);
 }
 
 /**
@@ -456,20 +466,67 @@ float wrap_360(const float angle)
     return res;
 }
 
-void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, struct com_aeronavics_OBSTACLE* obstacle_message) 
+float * vectorMulti(float matrix[3][3], float array[3]) {
+    /*Multiplies matrix by a vector to give a resultant vector*/
+    int i;
+    int k;
+    float* result = (float*)malloc(3 * sizeof(float));
+
+    for (i = 0; i < 3; ++i) {
+        result[i] = 0;
+        for (k = 0; k < 3; ++k) {
+            result[i] += matrix[i][k] * array[k];
+        }
+    }
+
+    return result;
+}
+
+float * vectorAdd(float vector1[3], const float vector2[3]) {
+    /*Adds two vectors together to give a resultant vector*/
+    int i;
+    float* result = (float*)malloc(3 * sizeof(float));
+
+    for (i = 0; i < 3; ++i) {
+        result[i] = (vector1[i] + vector2[i]);
+    }
+
+    return result;
+}
+
+void coordinate_transform(DPIF_PointCloudCartesian* objPos, const uint8_t sensor_orientation)
 {
-    
+    float theta =  M_PI / 180 * radar_angles[sensor_orientation]; //Radar angle in radians.
+
+    float R_rotate[3][3] = {{-sin(theta), cos(theta),  0},
+                            {cos(theta),  sin(theta),  0},     
+                            {         0,           0, -1}};
+
+    float obstacle_pos[3] = {objPos->x, objPos->y, objPos->z};   
+    float* temp_array = vectorMulti(R_rotate, obstacle_pos);
+    float* obstacle_local_pos = vectorAdd(temp_array, radar_pos[sensor_orientation]); 
+
+    objPos->x = obstacle_local_pos[0];
+    objPos->y = obstacle_local_pos[1];
+    objPos->z = obstacle_local_pos[2];
+
+    free(temp_array);
+    free(obstacle_local_pos);
+}
+
+void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, const uint8_t sensor_orientation, struct com_aeronavics_OBSTACLE* obstacle_message) 
+{
+    if (sensor_orientation != COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_UNDEFINED) {        
+        coordinate_transform(objPos, sensor_orientation); 
+    } 
+
     float xy;
 
     xy = sqrt(objPos->x*objPos->x + objPos->y*objPos->y);
 
     obstacle_message->distance = sqrt(xy*xy + objPos->z*objPos->z);
-    obstacle_message->yaw = wrap_360(180/M_PI * atan2(objPos->x, objPos->y));
+    obstacle_message->yaw = wrap_360(180/M_PI * atan2(objPos->y, objPos->x));
     obstacle_message->pitch = 180/M_PI * (M_PI/2 - atan2(xy, objPos->z));
-
-    // obstacle_message->distance = 1;
-    // obstacle_message->yaw = 2;
-    // obstacle_message->pitch = 3;
 }
 
 /**
@@ -482,7 +539,7 @@ void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, struct com_aero
  *  @retval
  *      Not Applicable.
  */
-void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut)
+void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut, const uint8_t sensor_orientation)
 {
     timestamp_usec += 100000;
 
@@ -499,10 +556,10 @@ void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo*
     // uint8_t* buffer = (uint8_t*) malloc(PROXIMITY_SENSOR_PROXIMITY_MAX_SIZE);
     uint8_t buffer[COM_AERONAVICS_PROXIMITYSENSOR_MAX_SIZE];
 
-    proximity_message->sensor_id = COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_LEFT;
+    proximity_message->sensor_id = sensor_orientation;
 
     for (len = 0; len < numObjOut; len++) {
-        populate_obstacle_message(objOut+len, &proximity_message->obstacles.data[len]);    
+        populate_obstacle_message(objOut+len, sensor_orientation, &proximity_message->obstacles.data[len]);    
     }   
 
     proximity_message->obstacles.len = len;
