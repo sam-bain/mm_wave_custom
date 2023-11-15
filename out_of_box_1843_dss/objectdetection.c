@@ -96,7 +96,7 @@
 
 /* Obj Det instance etc */
 #include <ti/datapath/dpc/objectdetection/objdethwa/include/objectdetectioninternal.h>
-#include <ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h>
+#include "objectdetection.h"
 
 #ifdef DBG_DPC_OBJDET
 ObjDetObj     *gObjDetObj;

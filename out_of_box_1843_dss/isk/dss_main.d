@@ -274,7 +274,7 @@ dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/HwiP.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/include/soc_common.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/include/soc_xwr18xx.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/SemaphoreP.h
-dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h
+dss_main.oe674: ../objectdetection.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/edma.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/include/edma_low_level.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/include/hw_edma_tc.h
@@ -307,6 +307,9 @@ dss_main.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/esm/esm.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/DebugP.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/mathutils/mathutils.h
+dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/cycleprofiler/cycle_profiler.h
+dss_main.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/c6x.h
+dss_main.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/vect.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_rfparser.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/adcbuf/ADCBuf.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwave/mmwave.h
@@ -320,14 +323,17 @@ dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_messages.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_adcconfig.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_error.h
-dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_output.h
-dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_config.h
-dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/dss/mmw_dss.h
+dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_flash.h
+dss_main.oe674: C:/mmwave_workspace/include/mmw_config.h
+dss_main.oe674: C:/mmwave_workspace/include/mmw_output.h
+dss_main.oe674: C:/mmwave_workspace/include/mmw_res.h
+dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/dopplerproc/dopplerprochwa.h
+dss_main.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
+dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/dopplerproc/dopplerproccommon.h
+dss_main.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
+dss_main.oe674: ../mmw_dss.h
 dss_main.oe674: C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/Task.h
 dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/mailbox/mailbox.h
-dss_main.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/cycleprofiler/cycle_profiler.h
-dss_main.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/c6x.h
-dss_main.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/vect.h
 
 ../dss_main.c:
 
@@ -877,7 +883,7 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/include/soc_xwr18xx.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/SemaphoreP.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h:
+../objectdetection.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/edma.h:
 
@@ -943,6 +949,12 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/DebugP.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/mathutils/mathutils.h:
 
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/cycleprofiler/cycle_profiler.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/c6x.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/vect.h:
+
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_rfparser.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/adcbuf/ADCBuf.h:
@@ -969,19 +981,25 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_adcconfig.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_error.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_output.h:
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_flash.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_config.h:
+C:/mmwave_workspace/include/mmw_config.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/dss/mmw_dss.h:
+C:/mmwave_workspace/include/mmw_output.h:
+
+C:/mmwave_workspace/include/mmw_res.h:
+
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/dopplerproc/dopplerprochwa.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
+
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/dopplerproc/dopplerproccommon.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
+
+../mmw_dss.h:
 
 C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/Task.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/mailbox/mailbox.h:
-
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/cycleprofiler/cycle_profiler.h:
-
-C:/ti/ti-cgt-c6000_8.3.3/include/c6x.h:
-
-C:/ti/ti-cgt-c6000_8.3.3/include/vect.h:
 

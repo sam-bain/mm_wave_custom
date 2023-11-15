@@ -52,8 +52,8 @@
 #include <ti/drivers/soc/soc.h>
 #include <ti/drivers/hwa/hwa.h>
 #include <ti/drivers/edma/edma.h>
-#include <ti/demo/xwr18xx/mmw/dss/mmw_dss.h>
-#include <ti/demo/xwr18xx/mmw/mmw_res.h>
+#include "mmw_dss.h"
+#include "mmw_res.h"
 
 
 /**************************************************************************

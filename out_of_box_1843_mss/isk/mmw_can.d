@@ -317,7 +317,7 @@ mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/canfd/includ
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/pinmux/pinmux.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/pinmux/include/pinmux_xwr18xx.h
-mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h
+mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_dss/objectdetection.h
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/hwa.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/dpm/dpm.h
@@ -1026,7 +1026,7 @@ C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/pinmux/include/pinmux_xwr18xx.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h:
+C:/mmwave_workspace/out_of_box_1843_dss/objectdetection.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/hwa.h:
 

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <ti/drivers/soc/soc.h>
-#include <ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h>
+#include "objectdetection.h"
 
 void Can_Initialize(SOC_Handle socHandle);
 

@@ -225,7 +225,7 @@ mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwa
 mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_monitoring.h
 mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_messages.h
 mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/hsiprotocol.h
-mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mss/mmw_mss.h
+mmw_lvds_stream.oer4f: ../mmw_mss.h
 mmw_lvds_stream.oer4f: C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/Semaphore.h
 mmw_lvds_stream.oer4f: C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/Task.h
 mmw_lvds_stream.oer4f: C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/package/Task_SupportProxy.h
@@ -244,8 +244,8 @@ mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal
 mmw_lvds_stream.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_adcconfig.h
 mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_monitor.h
-mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_output.h
-mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h
+mmw_lvds_stream.oer4f: C:/mmwave_workspace/include/mmw_output.h
+mmw_lvds_stream.oer4f: C:/mmwave_workspace/out_of_box_1843_dss/objectdetection.h
 mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/hwa.h
 mmw_lvds_stream.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/dpm/dpm.h
@@ -299,9 +299,9 @@ mmw_lvds_stream.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_lvds_stream.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/string.h
 mmw_lvds_stream.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdio.h
 mmw_lvds_stream.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/math.h
-mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_config.h
-mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mss/mmw_lvds_stream.h
-mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mmw_res.h
+mmw_lvds_stream.oer4f: C:/mmwave_workspace/include/mmw_config.h
+mmw_lvds_stream.oer4f: ../mmw_lvds_stream.h
+mmw_lvds_stream.oer4f: C:/mmwave_workspace/include/mmw_res.h
 mmw_lvds_stream.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/dopplerproc/dopplerprochwa.h
 mmw_lvds_stream.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdlib.h
 mmw_lvds_stream.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
@@ -765,7 +765,7 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_messa
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/hsiprotocol.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mss/mmw_mss.h:
+../mmw_mss.h:
 
 C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/Semaphore.h:
 
@@ -803,9 +803,9 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_adcconfig.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_monitor.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_output.h:
+C:/mmwave_workspace/include/mmw_output.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h:
+C:/mmwave_workspace/out_of_box_1843_dss/objectdetection.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/hwa.h:
 
@@ -913,11 +913,11 @@ C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdio.h:
 
 C:/ti/ti-cgt-arm_16.9.6.LTS/include/math.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_config.h:
+C:/mmwave_workspace/include/mmw_config.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mss/mmw_lvds_stream.h:
+../mmw_lvds_stream.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mmw_res.h:
+C:/mmwave_workspace/include/mmw_res.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/dopplerproc/dopplerprochwa.h:
 

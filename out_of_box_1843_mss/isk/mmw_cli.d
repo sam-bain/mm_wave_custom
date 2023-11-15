@@ -115,8 +115,13 @@ mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/include/
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/include/soc_mpu.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/include/soc_xwr18xx.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/mathutils/mathutils.h
-mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_config.h
-mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h
+mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_rfparser.h
+mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/adcbuf/ADCBuf.h
+mmw_cli.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
+mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_adcconfig.h
+mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_error.h
+mmw_cli.oer4f: C:/mmwave_workspace/include/mmw_config.h
+mmw_cli.oer4f: C:/mmwave_workspace/out_of_box_1843_dss/objectdetection.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/edma.h
 mmw_cli.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/include/edma_low_level.h
@@ -177,7 +182,7 @@ mmw_cli.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_cli.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/string.h
 mmw_cli.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdio.h
 mmw_cli.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/math.h
-mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mss/mmw_mss.h
+mmw_cli.oer4f: ../mmw_mss.h
 mmw_cli.oer4f: C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/Semaphore.h
 mmw_cli.oer4f: C:/ti/xdctools_3_50_08_24_core/packages/xdc/runtime/Types.h
 mmw_cli.oer4f: C:/ti/xdctools_3_50_08_24_core/packages/xdc/runtime/IInstance.h
@@ -277,18 +282,13 @@ mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/gpio/gpio.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/gpio/include/reg_gio.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/mailbox/mailbox.h
 mmw_cli.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
-mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_adcconfig.h
-mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/adcbuf/ADCBuf.h
-mmw_cli.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_monitor.h
-mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_output.h
-mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mss/mmw_lvds_stream.h
+mmw_cli.oer4f: C:/mmwave_workspace/include/mmw_output.h
+mmw_cli.oer4f: ../mmw_lvds_stream.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/cbuff/cbuff.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/csi/csi.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/hsiheader.h
 mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/hsiprotocol.h
-mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_rfparser.h
-mmw_cli.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_error.h
 mmw_cli.oer4f: ../../out_of_box_1843_dss/custom_type_defs.h
 mmw_cli.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdlib.h
 mmw_cli.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
@@ -526,9 +526,19 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/soc/include/soc_xwr18xx.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/mathutils/mathutils.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_config.h:
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_rfparser.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h:
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/adcbuf/ADCBuf.h:
+
+C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h:
+
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_adcconfig.h:
+
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_error.h:
+
+C:/mmwave_workspace/include/mmw_config.h:
+
+C:/mmwave_workspace/out_of_box_1843_dss/objectdetection.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/edma.h:
 
@@ -650,7 +660,7 @@ C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdio.h:
 
 C:/ti/ti-cgt-arm_16.9.6.LTS/include/math.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mss/mmw_mss.h:
+../mmw_mss.h:
 
 C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/Semaphore.h:
 
@@ -850,17 +860,11 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/mailbox/mailbox.h:
 
 C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_adcconfig.h:
-
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/adcbuf/ADCBuf.h:
-
-C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h:
-
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_monitor.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_output.h:
+C:/mmwave_workspace/include/mmw_output.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mss/mmw_lvds_stream.h:
+../mmw_lvds_stream.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/cbuff/cbuff.h:
 
@@ -869,10 +873,6 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/csi/csi.h:
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/hsiheader.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/hsiprotocol.h:
-
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_rfparser.h:
-
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/utils/mmwdemo_error.h:
 
 ../../out_of_box_1843_dss/custom_type_defs.h:
 

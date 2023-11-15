@@ -242,6 +242,7 @@ objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwa
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_monitoring.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_messages.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h
+objectdetection.oe674: ../objectdetection.h
 
 ../objectdetection.c:
 
@@ -726,4 +727,6 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_monit
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_messages.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h:
+
+../objectdetection.h:
 

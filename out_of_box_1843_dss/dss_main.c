@@ -71,18 +71,22 @@
 #include <ti/common/sys_common.h>
 #include <ti/common/mmwave_sdk_version.h>
 #include <ti/control/dpm/dpm.h>
-#include <ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h>
+#include "objectdetection.h"
 #include <ti/drivers/soc/soc.h>
 #include <ti/drivers/esm/esm.h>
 #include <ti/drivers/osal/DebugP.h>
 #include <ti/utils/mathutils/mathutils.h>
 
 /* Demo Include Files */
-#include <ti/demo/utils/mmwdemo_rfparser.h>
-#include <ti/demo/xwr18xx/mmw/include/mmw_output.h>
-#include <ti/demo/xwr18xx/mmw/include/mmw_config.h>
-#include <ti/demo/xwr18xx/mmw/dss/mmw_dss.h>
 #include <ti/utils/cycleprofiler/cycle_profiler.h>
+#include <ti/demo/utils/mmwdemo_rfparser.h>
+#include <ti/board/antenna_geometry.h>
+#include <ti/demo/utils/mmwdemo_flash.h>
+
+#include "mmw_config.h"
+#include "mmw_output.h"
+#include "mmw_res.h"
+#include "mmw_dss.h"
 
 /**
  * @brief Task Priority settings:

@@ -621,15 +621,18 @@
 #include <ti/utils/mathutils/mathutils.h>
 
 /* Demo Include Files */
-#include <ti/demo/xwr18xx/mmw/include/mmw_config.h>
+
 #include <ti/demo/utils/mmwdemo_rfparser.h>
 #include <ti/demo/utils/mmwdemo_adcconfig.h>
 #include <ti/demo/utils/mmwdemo_monitor.h>
-#include <ti/demo/xwr18xx/mmw/include/mmw_output.h>
-#include <ti/demo/xwr18xx/mmw/mmw_res.h>
-#include <ti/demo/xwr18xx/mmw/mss/mmw_mss.h>
+
 #include <ti/board/antenna_geometry.h>
 #include <ti/demo/utils/mmwdemo_flash.h>
+
+#include "mmw_config.h"
+#include "mmw_output.h"
+#include "mmw_res.h"
+#include "mmw_mss.h"
 
 /* Profiler Include Files */
 #include <ti/utils/cycleprofiler/cycle_profiler.h>

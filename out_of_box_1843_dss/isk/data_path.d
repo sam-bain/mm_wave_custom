@@ -34,7 +34,7 @@ data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/edma.
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/include/edma_low_level.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/include/hw_edma_tc.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/include/hw_edma_tpcc.h
-data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/dss/mmw_dss.h
+data_path.oe674: ../mmw_dss.h
 data_path.oe674: C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/Task.h
 data_path.oe674: C:/ti/xdctools_3_50_08_24_core/packages/xdc/std.h
 data_path.oe674: C:/ti/bios_6_73_01_01/packages/ti/targets/elf/std.h
@@ -160,13 +160,13 @@ data_path.oe674: C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/package/Task_Supp
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/mailbox/mailbox.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/SemaphoreP.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/DebugP.h
-data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_output.h
+data_path.oe674: C:/mmwave_workspace/include/mmw_output.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/sys_common.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/sys_types.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/sys_defs.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/sys_common_xwr18xx.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/sys_common_xwr18xx_dss.h
-data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h
+data_path.oe674: C:/mmwave_workspace/out_of_box_1843_dss/objectdetection.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/dpm/dpm.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpu/rangeproc/rangeprochwa.h
 data_path.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
@@ -199,7 +199,7 @@ data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_sensor.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_monitoring.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_messages.h
-data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mmw_res.h
+data_path.oe674: C:/mmwave_workspace/include/mmw_res.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/dopplerproc/dopplerprochwa.h
 data_path.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/dopplerproc/dopplerproccommon.h
@@ -273,7 +273,7 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/include/hw_edma_tc.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/edma/include/hw_edma_tpcc.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/dss/mmw_dss.h:
+../mmw_dss.h:
 
 C:/ti/bios_6_73_01_01/packages/ti/sysbios/knl/Task.h:
 
@@ -525,7 +525,7 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/SemaphoreP.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/DebugP.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/include/mmw_output.h:
+C:/mmwave_workspace/include/mmw_output.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/sys_common.h:
 
@@ -537,7 +537,7 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/sys_common_xwr18xx.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/sys_common_xwr18xx_dss.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h:
+C:/mmwave_workspace/out_of_box_1843_dss/objectdetection.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/dpm/dpm.h:
 
@@ -603,7 +603,7 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_monit
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_messages.h:
 
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/demo/xwr18xx/mmw/mmw_res.h:
+C:/mmwave_workspace/include/mmw_res.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/dopplerproc/dopplerprochwa.h:
 

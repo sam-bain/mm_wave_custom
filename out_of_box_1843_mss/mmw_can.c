@@ -65,7 +65,7 @@
 
 #include <ti/drivers/canfd/canfd.h>
 #include <ti/drivers/pinmux/pinmux.h>
-#include <ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h>
+#include "objectdetection.h"
 
 #include "mmw_can.h"
 // #include "dronecan_msgs.h"
