@@ -168,10 +168,11 @@ data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/sys_common_
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/common/sys_common_xwr18xx_dss.h
 data_path.oe674: C:/mmwave_workspace/out_of_box_1843_dss/objectdetection.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/dpm/dpm.h
+data_path.oe674: C:/mmwave_workspace/out_of_box_1843_dss/dpif_pointcloud.h
+data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_types.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpu/rangeproc/rangeprochwa.h
 data_path.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_adcdata.h
-data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_types.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_radarcube.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dp_error.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpedma/dpedmahwa.h
@@ -541,13 +542,15 @@ C:/mmwave_workspace/out_of_box_1843_dss/objectdetection.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/dpm/dpm.h:
 
+C:/mmwave_workspace/out_of_box_1843_dss/dpif_pointcloud.h:
+
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_types.h:
+
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpu/rangeproc/rangeprochwa.h:
 
 C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_adcdata.h:
-
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_types.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_radarcube.h:
 

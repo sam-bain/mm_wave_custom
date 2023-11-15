@@ -51,12 +51,13 @@ objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/board/antenn
 objectdetection.oe674: ../dbscan.h
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/limits.h
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
+objectdetection.oe674: ../dpif_pointcloud.h
+objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_types.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/aoaproc/aoaprochwa.h
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/hwa.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_radarcube.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_pointcloud.h
-objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_types.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpedma/dpedma.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dp_error.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/aoaproc/aoaproc_common.h
@@ -233,6 +234,7 @@ objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/cfarcaproc/cfarcaproccommon.h
 objectdetection.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
+objectdetection.oe674: ../objectdetection.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/include/objectdetectioninternal.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/mmwavelink.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_datatypes.h
@@ -242,7 +244,6 @@ objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwa
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_monitoring.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_messages.h
 objectdetection.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h
-objectdetection.oe674: ../objectdetection.h
 
 ../objectdetection.c:
 
@@ -346,6 +347,10 @@ C:/ti/ti-cgt-c6000_8.3.3/include/limits.h:
 
 C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
 
+../dpif_pointcloud.h:
+
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_types.h:
+
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/aoaproc/aoaprochwa.h:
 
 C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
@@ -355,8 +360,6 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/hwa/hwa.h:
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_radarcube.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_pointcloud.h:
-
-C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_types.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpedma/dpedma.h:
 
@@ -710,6 +713,8 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/cfarcaproc/cfarcap
 
 C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
 
+../objectdetection.h:
+
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/include/objectdetectioninternal.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/mmwavelink.h:
@@ -727,6 +732,4 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_monit
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_messages.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/objectdetection/objdethwa/objectdetection.h:
-
-../objectdetection.h:
 

@@ -48,6 +48,7 @@ extern "C" {
 #include <ti/common/sys_common.h>
 
 /* DPUs */
+#include "dpif_pointcloud.h" //Local overwrite
 #include <ti/datapath/dpu/rangeproc/rangeprochwa.h>
 #include <ti/datapath/dpc/dpu/staticclutterproc/staticclutterproc.h>
 #include <ti/datapath/dpc/dpu/dopplerproc/dopplerprochwa.h>

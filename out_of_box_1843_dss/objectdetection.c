@@ -63,6 +63,7 @@
 #if defined(USE_2D_AOA_DPU)
 #include <ti/datapath/dpc/dpu/aoa2dproc/aoa2dprochwa.h>
 #else
+#include "dpif_pointcloud.h" //Local overwrite
 #include <ti/datapath/dpc/dpu/aoaproc/aoaprochwa.h>
 #endif
 
@@ -95,8 +96,9 @@
 #include APP_RESOURCE_FILE
 
 /* Obj Det instance etc */
-#include <ti/datapath/dpc/objectdetection/objdethwa/include/objectdetectioninternal.h>
 #include "objectdetection.h"
+#include <ti/datapath/dpc/objectdetection/objdethwa/include/objectdetectioninternal.h>
+
 
 #ifdef DBG_DPC_OBJDET
 ObjDetObj     *gObjDetObj;
@@ -197,8 +199,6 @@ ObjDetObj     *gObjDetObj;
 #define DPC_USE_SYMMETRIC_WINDOW_DOPPLER_DPU
 #define DPC_DPU_RANGEPROC_FFT_WINDOW_TYPE            MATHUTILS_WIN_BLACKMAN
 #define DPC_DPU_DOPPLERPROC_FFT_WINDOW_TYPE          MATHUTILS_WIN_HANNING
-
-#define MAX_OBJ_OUT 50
 
 #define THRESHOLD_TO_SNR 7.5 //Slightly confusing translation from what the threshold defined in the config is converted to to the outputted SNR values.
 
@@ -1087,16 +1087,6 @@ int32_t DPC_ObjectDetection_execute
     {
         result->compRxChanBiasMeasurement = NULL;
     }
-
-    // //Dynamically threshold points based on distance from module
-    // for (cntr = 0; cntr < result->numObjOut; cntr++) {
-    //     float distance = get_distance_cartesian(result->objOut+cntr);
-    //     if (above_dynamic_threshold(distance, (result->objOutSideInfo + cntr)->snr, subFrmObj->dynCfg.cfarCfgRange.thresholdScale, subFrmObj->dynCfg.fovRange.max, subFrmObj->dynCfg.multiObjBeamFormingCfg.multiPeakThrsScal)) {
-    //         (result->objOutSideInfo + cntr)->noise = 1;
-    //     } else {
-    //         (result->objOutSideInfo + cntr)->noise = 0;
-    //     }
-    // }
  
     //Prepare input for dbscan module
     for (cntr = 0; cntr < result->numObjOut; cntr++) {
@@ -1112,14 +1102,10 @@ int32_t DPC_ObjectDetection_execute
                                  subFrmObj->dpuCfg.rangeCfg.dynCfg.calibDcRangeSigCfg->positiveBinIdx);
 
     for (cntr = 0; cntr < result->numObjOut; cntr++) {
-        (result->objOutSideInfo + cntr)->noise = (points+cntr)->cluster_id; //Overwriting noise value with cluster_id for debugging
+        (result->objOutSideInfo+cntr)->cluster_id = (points+cntr)->cluster_id;
     } 
 
     free(points);
-
-    //Coordinate transformation
-    // DPC_ObjDet_Transform_Coordinates(result->ObjOut, result->numObjOut);
-
 
     /* For rangeProcHwa, interChirpProcessingMargin is not available */
     objDetObj->stats.interChirpProcessingMargin = 0;

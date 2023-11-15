@@ -49,6 +49,7 @@
 #include <ti/sysbios/family/arm/v7r/vim/Hwi.h>
 
 /* mmWave SDK Include Files: */
+#include "objectdetection.h"
 #include <ti/common/sys_common.h>
 #include <ti/drivers/soc/soc.h>
 #include <ti/drivers/esm/esm.h>
@@ -65,7 +66,7 @@
 
 #include <ti/drivers/canfd/canfd.h>
 #include <ti/drivers/pinmux/pinmux.h>
-#include "objectdetection.h"
+
 
 #include "mmw_can.h"
 // #include "dronecan_msgs.h"
@@ -512,14 +513,21 @@ void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo*
     static uint8_t transfer_id;
     uint32_t message_len;
 
-    // uint8_t* buffer = (uint8_t*) malloc(PROXIMITY_SENSOR_PROXIMITY_MAX_SIZE);
     uint8_t buffer[COM_AERONAVICS_PROXIMITYSENSOR_MAX_SIZE];
 
     proximity_message->sensor_id = sensor_orientation;
 
-    for (len = 0; len < numObjOut; len++) {
-        populate_obstacle_message(objOut+len, sensor_orientation, &proximity_message->obstacles.data[len]);    
+    uint8_t index;
+    CLI_write("Cluster IDs:");
+    for (index = 0; index < numObjOut; index++) {
+        CLI_write(" %d", (objOutSideInfo+index)->cluster_id);
+        if ((objOutSideInfo+index)->cluster_id >= 0) { //Only send obstacles that belong to a cluster
+            populate_obstacle_message(objOut+index, sensor_orientation, &proximity_message->obstacles.data[len]);  
+            len++;
+        }
+          
     }   
+    CLI_write("\n");
 
     proximity_message->obstacles.len = len;
 

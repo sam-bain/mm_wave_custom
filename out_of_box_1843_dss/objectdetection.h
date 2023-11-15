@@ -45,6 +45,7 @@
 #include <ti/drivers/hwa/hwa.h>
 #include <ti/control/dpm/dpm.h>
 
+#include "dpif_pointcloud.h" //Local overwrite
 #include <ti/datapath/dpu/rangeproc/rangeprochwa.h>
 #include <ti/datapath/dpc/dpu/staticclutterproc/staticclutterproc.h>
 #include <ti/datapath/dpc/dpu/cfarcaproc/cfarcaprochwa.h>
@@ -60,6 +61,9 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+
+#define MAX_OBJ_OUT 50 //Added by Sam Bain, Aeronavics. Not sure if this value is correct.
 
 /** @defgroup DPC_OBJDET_EXTERNAL        Object Detection DPC (Data-path Processing Chain) External
  *
