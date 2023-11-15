@@ -60,6 +60,7 @@
 #include <ti/utils/cli/cli.h>
 #include <ti/drivers/osal/DebugP.h>
 #include <ti/drivers/osal/HwiP.h>
+#include <ti/drivers/osal/CycleprofilerP.h>
 #include <ti/utils/hsiheader/hsiheader.h>
 
 #include <ti/drivers/canfd/canfd.h>
@@ -141,9 +142,6 @@ CANFD_MsgObjHandle txMsgObjHandle;
 CANFD_MsgObjHandle rxMsgObjHandle;
 
 CANFD_MCANMsgObjCfgParams txMsgObjectParams;
-
-
-static uint64_t timestamp_usec = 0;
 
 static void onTransferReceived(CanardInstance *ins, CanardRxTransfer *transfer);
 static bool shouldAcceptTransfer(const CanardInstance *ins,
@@ -504,8 +502,6 @@ void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, const uint8_t s
  */
 void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut, const uint8_t sensor_orientation)
 {
-    timestamp_usec += 100000;
-
     uint8_t len;
     
     struct com_aeronavics_ProximitySensor* proximity_message = malloc(sizeof(struct com_aeronavics_ProximitySensor));
@@ -547,15 +543,16 @@ void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo*
  */
 static uint64_t micros64(void)
 {
-    // static uint64_t first_us;
-    // struct timespec ts;
-    // clock_gettime(CLOCK_MONOTONIC, &ts);
-    // uint64_t tus = (uint64_t)(ts.tv_sec * 1000000ULL + ts.tv_nsec / 1000ULL);
-    // if (first_us == 0) {
-    //     first_us = tus;
-    // }
-    // return tus - first_us;
-    return timestamp_usec;
+    static uint32_t last_time_stamp = 0;
+    static uint64_t time_since_boot = 0;
+
+    volatile uint32_t time_increment; //Intentionally uint32_t as will handle overflow situations
+    //Cycle profiler overflows every 21 seconds, so need to 
+    time_increment = (CycleprofilerP_getTimeStamp() - last_time_stamp);
+    time_since_boot += time_increment/R4F_CLOCK_MHZ;
+    last_time_stamp = CycleprofilerP_getTimeStamp();
+
+    return time_since_boot;
 }
 
 /*
@@ -717,10 +714,12 @@ static void send_NodeStatus(void)
 */
 void CAN_process1HzTasks(void)
 {
+
     /*
       Purge transfers that are no longer transmitted. This can free up some memory
     */
-    canardCleanupStaleTransfers(&canard, timestamp_usec);
+    uint64_t timestamp = micros64();
+    canardCleanupStaleTransfers(&canard, timestamp);
 
     /*
      Transmit the node status message

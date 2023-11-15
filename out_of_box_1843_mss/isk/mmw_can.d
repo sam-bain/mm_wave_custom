@@ -298,6 +298,8 @@ mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/i
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/cli/cli.h
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/DebugP.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
+mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/CycleprofilerP.h
+mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/hsiheader/hsiheader.h
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/cbuff/cbuff.h
 mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/csi/csi.h
@@ -983,6 +985,10 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/control/mmwavelink/include/rl_messa
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/utils/cli/cli.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/DebugP.h:
+
+C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h:
+
+C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/osal/CycleprofilerP.h:
 
 C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h:
 
