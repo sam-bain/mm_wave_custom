@@ -568,9 +568,6 @@ typedef struct DPC_ObjectDetection_ExecuteResult_t
     /*! @brief      Detected objects output list of @ref numObjOut elements */
     DPIF_PointCloudCartesian *objOut;
 
-    /*! @brief      Cluster id list of @ref numObjOut elements */
-    int16_t *cluster_id;
-
     /*! @brief      Radar Cube structure */
     DPIF_RadarCube  radarCube;
 
