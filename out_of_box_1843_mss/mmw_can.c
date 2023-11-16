@@ -69,8 +69,7 @@
 
 
 #include "mmw_can.h"
-// #include "dronecan_msgs.h"
-#include "dsdlc_generated/include/dronecan_msgs.h"
+#include "dronecan_msgs.h"
 
 
 /*********Libcanard Stuff*************/
@@ -482,7 +481,11 @@ void coordinate_transform(DPIF_PointCloudCartesian* objPos, const uint8_t sensor
     free(obstacle_local_pos);
 }
 
+#if (USE_CUSTOM_MESSAGE_TYPE)
 void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, const uint8_t sensor_orientation, struct com_aeronavics_OBSTACLE* obstacle_message) 
+#else
+void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, const uint8_t sensor_orientation, struct proximity_sensor_Proximity* obstacle_message) 
+#endif
 {
     float xy;     
 
@@ -498,14 +501,14 @@ void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, const uint8_t s
 /**
  *  @b Description
  *  @n
- *      Simple function to write obstacle data to Libcanard Queue
+ *      Simple function to write obstacle data to Libcanard Queue in custom Aeronavics droneCAN message proximity format
  *
  *  @param[in]  result obstacle data.
  * 
  *  @retval
  *      Not Applicable.
  */
-void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut, const uint8_t sensor_orientation)
+void CAN_writeCustomObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut, const uint8_t sensor_orientation)
 {
     uint8_t len;
     
@@ -541,6 +544,79 @@ void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo*
         CANARD_TRANSFER_PRIORITY_LOW,
         buffer,
         message_len); 
+
+    free(proximity_message);
+
+}
+
+/**
+ *  @b Description
+ *  @n
+ *      Simple function to write obstacle data to Libcanard Queue in standard droneCAN proximity format
+ *
+ *  @param[in]  result obstacle data.
+ * 
+ *  @retval
+ *      Not Applicable.
+ */
+void CAN_writeStandardObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut, const uint8_t sensor_orientation)
+{
+
+    int index;
+    int obstacle_count = 0;
+    struct proximity_sensor_Proximity* proximity_message = malloc(sizeof(struct proximity_sensor_Proximity));
+
+    // we need a static variable for the transfer ID. This is
+    // incremeneted on each transfer, allowing for detection of packet
+    // loss
+    static uint8_t transfer_id;
+    uint32_t len;
+
+    // uint8_t* buffer = (uint8_t*) malloc(PROXIMITY_SENSOR_PROXIMITY_MAX_SIZE);
+    uint8_t buffer[PROXIMITY_SENSOR_PROXIMITY_MAX_SIZE];
+
+    proximity_message->sensor_id =    sensor_orientation;
+    proximity_message->flags =        0;
+
+    proximity_message->reading_type = PROXIMITY_SENSOR_PROXIMITY_READING_TYPE_GOOD;
+
+    for (index = 0; index < numObjOut; index++) {
+        if ((objOutSideInfo+index)->cluster_id >= 0) { //Only send obstacles that belong to a cluster
+        
+            populate_obstacle_message(objOut+index, sensor_orientation, proximity_message);
+            len = proximity_sensor_Proximity_encode(proximity_message, buffer);
+
+            //Add proximity message to CAN queue
+            canardBroadcast(&canard,
+                PROXIMITY_SENSOR_PROXIMITY_SIGNATURE,
+                PROXIMITY_SENSOR_PROXIMITY_ID,
+                &transfer_id,
+                CANARD_TRANSFER_PRIORITY_LOW,
+                buffer,
+                len); 
+
+            obstacle_count++;
+        }
+    }       
+    
+    if (obstacle_count == 0) { //No obstacles, send no_data message
+        proximity_message->reading_type = PROXIMITY_SENSOR_PROXIMITY_READING_TYPE_NO_DATA;
+        proximity_message->distance = 0;
+        proximity_message->yaw      = 0;
+        proximity_message->pitch    = 0;
+        
+        len = proximity_sensor_Proximity_encode(proximity_message, buffer);
+
+        
+        canardBroadcast(&canard,
+            PROXIMITY_SENSOR_PROXIMITY_SIGNATURE,
+            PROXIMITY_SENSOR_PROXIMITY_ID,
+            &transfer_id,
+            CANARD_TRANSFER_PRIORITY_LOW,
+            buffer,
+            len); 
+    }
+        
 
     free(proximity_message);
 

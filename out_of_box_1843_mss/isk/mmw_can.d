@@ -379,18 +379,18 @@ mmw_can.oer4f: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/drivers/pinmux/inclu
 mmw_can.oer4f: ../mmw_can.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdio.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdlib.h
-mmw_can.oer4f: ../dsdlc_generated/include/dronecan_msgs.h
-mmw_can.oer4f: ../dsdlc_generated/include/proximity_sensor.Proximity.h
+mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/dronecan_msgs.h
+mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/proximity_sensor.Proximity.h
 mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/canard.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/assert.h
-mmw_can.oer4f: ../dsdlc_generated/include/uavcan.protocol.GetNodeInfo.h
+mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.GetNodeInfo.h
 mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.GetNodeInfo_req.h
 mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.GetNodeInfo_res.h
 mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.HardwareVersion.h
 mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.NodeStatus.h
 mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.SoftwareVersion.h
-mmw_can.oer4f: ../dsdlc_generated/include/com.aeronavics.ProximitySensor.h
+mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/com.aeronavics.ProximitySensor.h
 mmw_can.oer4f: C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/com.aeronavics.OBSTACLE.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/time.h
 mmw_can.oer4f: C:/ti/ti-cgt-arm_16.9.6.LTS/include/abi_prefix.h
@@ -1156,9 +1156,9 @@ C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdio.h:
 
 C:/ti/ti-cgt-arm_16.9.6.LTS/include/stdlib.h:
 
-../dsdlc_generated/include/dronecan_msgs.h:
+C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/dronecan_msgs.h:
 
-../dsdlc_generated/include/proximity_sensor.Proximity.h:
+C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/proximity_sensor.Proximity.h:
 
 C:/mmwave_workspace/out_of_box_1843_mss/canard.h:
 
@@ -1166,7 +1166,7 @@ C:/ti/ti-cgt-arm_16.9.6.LTS/include/stddef.h:
 
 C:/ti/ti-cgt-arm_16.9.6.LTS/include/assert.h:
 
-../dsdlc_generated/include/uavcan.protocol.GetNodeInfo.h:
+C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.GetNodeInfo.h:
 
 C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.GetNodeInfo_req.h:
 
@@ -1178,7 +1178,7 @@ C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.
 
 C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/uavcan.protocol.SoftwareVersion.h:
 
-../dsdlc_generated/include/com.aeronavics.ProximitySensor.h:
+C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/com.aeronavics.ProximitySensor.h:
 
 C:/mmwave_workspace/out_of_box_1843_mss/dsdlc_generated/include/com.aeronavics.OBSTACLE.h:
 
