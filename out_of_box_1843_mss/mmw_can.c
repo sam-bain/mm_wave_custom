@@ -518,16 +518,13 @@ void CAN_writeObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo*
     proximity_message->sensor_id = sensor_orientation;
 
     uint8_t index;
-    CLI_write("Cluster IDs:");
     for (index = 0; index < numObjOut; index++) {
-        CLI_write(" %d", (objOutSideInfo+index)->cluster_id);
         if ((objOutSideInfo+index)->cluster_id >= 0) { //Only send obstacles that belong to a cluster
             populate_obstacle_message(objOut+index, sensor_orientation, &proximity_message->obstacles.data[len]);  
             len++;
         }
           
     }   
-    CLI_write("\n");
 
     proximity_message->obstacles.len = len;
 

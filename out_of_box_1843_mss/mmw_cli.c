@@ -92,9 +92,7 @@ static int32_t MmwDemo_CLIAnalogMonitorCfg (int32_t argc, char* argv[]);
 static int32_t MmwDemo_CLILvdsStreamCfg (int32_t argc, char* argv[]);
 static int32_t MmwDemo_CLIConfigDataPort (int32_t argc, char* argv[]);
 
-//new function for coordinate transformation
-static int32_t MmwDemo_CLISetPosition (int32_t argc, char* argv[]);
-static int32_t MmwDemo_CLISetAngle (int32_t argc, char* argv[]);
+//new function for dbScan clustering configuration
 static int32_t MmwDemo_CLIDBScanCfg (int32_t argc, char* argv[]);
 
 /**************************************************************************
@@ -1235,9 +1233,6 @@ static int32_t MmwDemo_CLIConfigDataPort (int32_t argc, char* argv[])
 }
 
 
-
-
-
 /**
  *  @b Description
  *  @n
@@ -1297,53 +1292,6 @@ static int32_t MmwDemo_CLICalibDataSaveRestore(int32_t argc, char* argv[])
     sscanf(argv[3], "0x%x", &gMmwMssMCB.calibCfg.flashOffset);
 
     gMmwMssMCB.isCalibCfgPending = 1;
-
-    return 0;
-}
-
-/**
- *  @b Description
- *  @n
- *      This is the custom CLI Set Position task, which is used to define the location of the radar module in relation to the
- *      desired origin.
- *       *
- *  @retval
- *      Not Applicable.
- */
-static int32_t MmwDemo_CLISetPosition (int32_t argc, char* argv[])
-{
-    float x_position, y_position, z_position;
-
-    /* Populate configuration: */
-    x_position                = (float) atof (argv[1]);
-    y_position                = (float) atof (argv[2]);
-    z_position                = (float) atof (argv[3]);
-
-    CLI_write("Position of radar module set\n");
-
-    return 0;
-}
-
-/**
- *  @b Description
- *  @n
- *      This is the custom CLI Set Angle task, which is used to define the location of the radar module in relation to the
- *      desired origin.
- *       *
- *  @param angle this is the angle the radar is facing in relation to the x axis of the desired coordinate frame (angle is measured in direction towards y-axis).
- *              For FRD coordinate system used in ArduCopter, this is CCW positive from above. O degrees means the radar faces directly forward on the drone.
- *  @retval
- *      Not Applicable.
- */
-static int32_t MmwDemo_CLISetAngle (int32_t argc, char* argv[])
-{
-    float angle;
-
-    /* Populate configuration: */
-    angle                = (float) atof (argv[1]);
-
-
-    CLI_write("Angle of radar module has been set\n");
 
     return 0;
 }
@@ -1531,16 +1479,6 @@ void MmwDemo_CLIInit (uint8_t taskPriority)
     cliCfg.tableEntry[cnt].cmd            = "calibData";
     cliCfg.tableEntry[cnt].helpString    = "<save enable> <restore enable> <Flash offset>";
     cliCfg.tableEntry[cnt].cmdHandlerFxn  = MmwDemo_CLICalibDataSaveRestore;
-    cnt++;
-
-    cliCfg.tableEntry[cnt].cmd            = "setPosition";
-    cliCfg.tableEntry[cnt].helpString    = "<x position> <y position> <z position>";
-    cliCfg.tableEntry[cnt].cmdHandlerFxn  = MmwDemo_CLISetPosition;
-    cnt++;
-
-    cliCfg.tableEntry[cnt].cmd            = "setAngle";
-    cliCfg.tableEntry[cnt].helpString    = "<angle>";
-    cliCfg.tableEntry[cnt].cmdHandlerFxn  = MmwDemo_CLISetAngle;
     cnt++;
 
     cliCfg.tableEntry[cnt].cmd            = "dbScanCfg";
