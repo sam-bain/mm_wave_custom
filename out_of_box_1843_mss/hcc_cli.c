@@ -84,6 +84,7 @@ char *hardCodedConfigCommands[] = {
     "multiObjBeamForming -1 0 5",
     "calibDcRangeSig -1 0 25 10 256",
     "clutterRemoval -1 0",
+    "dbScanCfg -1 1 2 0.2 25 10",
 
     "compRangeBiasAndRxChanPhase 0.0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0 1 0",
     "measureRangeBiasAndRxChanPhase 0 0.2 2",

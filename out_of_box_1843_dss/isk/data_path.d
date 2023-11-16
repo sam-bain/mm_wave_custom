@@ -186,6 +186,9 @@ data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_pointcloud.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/cfarcaproc/cfarcaproccommon.h
 data_path.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
+data_path.oe674: C:/mmwave_workspace/out_of_box_1843_dss/dbscan.h
+data_path.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/limits.h
+data_path.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/aoaproc/aoaprochwa.h
 data_path.oe674: C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h
 data_path.oe674: C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/board/antenna_geometry.h
@@ -575,6 +578,12 @@ C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_detmatrix.h:
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpif/dpif_pointcloud.h:
 
 C:/ti/mmwave_sdk_03_06_00_00-LTS/packages/ti/datapath/dpc/dpu/cfarcaproc/cfarcaproccommon.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
+
+C:/mmwave_workspace/out_of_box_1843_dss/dbscan.h:
+
+C:/ti/ti-cgt-c6000_8.3.3/include/limits.h:
 
 C:/ti/ti-cgt-c6000_8.3.3/include/stdlib.h:
 

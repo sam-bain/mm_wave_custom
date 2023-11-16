@@ -3,6 +3,7 @@
         "mmw_can.h": "c",
         "dronecan_msgs.h": "c",
         "mmw_lvds_stream.h": "c",
-        "dpif_pointcloud.h": "c"
+        "dpif_pointcloud.h": "c",
+        "dbscan.h": "c"
     }
 }

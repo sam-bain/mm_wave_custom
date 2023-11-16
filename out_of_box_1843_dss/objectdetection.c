@@ -1088,22 +1088,30 @@ int32_t DPC_ObjectDetection_execute
         result->compRxChanBiasMeasurement = NULL;
     }
  
-    //Prepare input for dbscan module
-    for (cntr = 0; cntr < result->numObjOut; cntr++) {
-        (points+cntr)->x = (result->objOut+cntr)->x;
-        (points+cntr)->y = (result->objOut+cntr)->y;
-        (points+cntr)->z = (result->objOut+cntr)->z;
-        (points+cntr)->cluster_id = -1;
-        (points+cntr)->snr = (result->objOutSideInfo+cntr)->snr/THRESHOLD_TO_SNR;
-    }
+
 
     //Execute dbscan clustering
-    dbscan(points, result->numObjOut, objDetObj->commonCfg.measureRxChannelBiasCfg.targetDistance, (uint8_t) objDetObj->commonCfg.measureRxChannelBiasCfg.searchWinSize, subFrmObj->dpuCfg.rangeCfg.dynCfg.calibDcRangeSigCfg->negativeBinIdx,
-                                 subFrmObj->dpuCfg.rangeCfg.dynCfg.calibDcRangeSigCfg->positiveBinIdx);
+    if (subFrmObj->dynCfg.dbScanCfg.enabled == 1) {
+        //Prepare input for dbscan module
+        for (cntr = 0; cntr < result->numObjOut; cntr++) {
+            (points+cntr)->x = (result->objOut+cntr)->x;
+            (points+cntr)->y = (result->objOut+cntr)->y;
+            (points+cntr)->z = (result->objOut+cntr)->z;
+            (points+cntr)->cluster_id = -1;
+            (points+cntr)->snr = (result->objOutSideInfo+cntr)->snr/THRESHOLD_TO_SNR;
+        }
 
-    for (cntr = 0; cntr < result->numObjOut; cntr++) {
-        (result->objOutSideInfo+cntr)->cluster_id = (points+cntr)->cluster_id;
-    } 
+        dbscan(points, result->numObjOut, subFrmObj->dynCfg.dbScanCfg);
+
+        for (cntr = 0; cntr < result->numObjOut; cntr++) {
+            (result->objOutSideInfo+cntr)->cluster_id = (points+cntr)->cluster_id;
+        } 
+    } else { //dbScan clustering is disabled, set all cluster ids to 0 so all datapoints are sent
+        for (cntr = 0; cntr < result->numObjOut; cntr++) {
+            (result->objOutSideInfo+cntr)->cluster_id = 0;
+        } 
+    }
+
 
     free(points);
 
@@ -2820,6 +2828,19 @@ static int32_t DPC_ObjectDetection_ioctl
 
                 /* save into object */
                 subFrmObj->dynCfg.extMaxVelCfg = cfg->cfg;
+
+                break;
+            }
+            case DPC_OBJDET_IOCTL__DYNAMIC_DBSCAN:
+            {
+                DPC_ObjectDetection_dbScanCfg *cfg;
+
+                DebugP_assert(argLen == sizeof(DPC_ObjectDetection_dbScanCfg));
+
+                cfg = (DPC_ObjectDetection_dbScanCfg*)arg;
+
+                /* save into object */
+                subFrmObj->dynCfg.dbScanCfg = cfg->cfg;
 
                 break;
             }

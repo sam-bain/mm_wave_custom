@@ -868,6 +868,9 @@ static void MmwDemo_setSubFramePendingState(MmwDemo_SubFrameCfg *subFrameCfg, ui
         case MMWDEMO_LVDSSTREAMCFG_OFFSET:
             subFrameCfg->isLvdsStreamCfgPending = 1;
         break;
+        case MMWDEMO_DBSCAN_OFFSET:
+            subFrameCfg->objDetDynCfg.isDbScanCfgPending = 1;
+        break;   
         default:
             MmwDemo_debugAssert(0);
         break;
@@ -918,7 +921,8 @@ static uint8_t MmwDemo_isDynObjDetCfgPendingState(MmwDemo_DPC_ObjDet_DynCfg *cfg
              (cfg->isPrepareRangeAzimuthHeatMapPending == 1) &&
              (cfg->isStaticClutterRemovalCfgPending    == 1) &&
              (cfg->isFovAoaCfgPending                  == 1) &&
-             (cfg->isExtMaxVelCfgPending               == 1);
+             (cfg->isExtMaxVelCfgPending               == 1) &&
+             (cfg->isDbScanCfgPending               == 1);
 
     return(retVal);
 }
@@ -967,7 +971,8 @@ static uint8_t MmwDemo_isDynObjDetCfgInNonPendingState(MmwDemo_DPC_ObjDet_DynCfg
              (cfg->isPrepareRangeAzimuthHeatMapPending == 0) &&
              (cfg->isStaticClutterRemovalCfgPending    == 0) &&
              (cfg->isFovAoaCfgPending                  == 0) &&
-             (cfg->isExtMaxVelCfgPending               == 0);
+             (cfg->isExtMaxVelCfgPending               == 0) &&
+             (cfg->isDbScanCfgPending               == 0);
 
     return(retVal);
 }
@@ -1011,6 +1016,7 @@ static void MmwDemo_resetDynObjDetCfgPendingState(MmwDemo_DPC_ObjDet_DynCfg *cfg
     cfg->isStaticClutterRemovalCfgPending = 0;
     cfg->isFovAoaCfgPending = 0;
 	cfg->isExtMaxVelCfgPending = 0;
+    cfg->isDbScanCfgPending = 0;
 }
 
 /**
@@ -2429,6 +2435,22 @@ static int32_t MmwDemo_processPendingDynamicCfgCommands(uint8_t subFrameIndx)
             goto exit;
         }
         subFrameCfg->isExtMaxVelCfgPending = 0;
+    }
+    if (subFrameCfg->isDbScanCfgPending == 1)
+    {
+        DPC_ObjectDetection_dbScanCfg cfg;
+
+        cfg.subFrameNum = subFrameIndx;
+        cfg.cfg = subFrameCfg->dynCfg.dbScanCfg;
+        retVal = DPM_ioctl (gMmwMssMCB.objDetDpmHandle,
+                            DPC_OBJDET_IOCTL__DYNAMIC_DBSCAN,
+                            &cfg,
+                            sizeof (DPC_ObjectDetection_dbScanCfg));
+        if (retVal != 0)
+        {
+            goto exit;
+        }
+        subFrameCfg->isDbScanCfgPending = 0;
     }
 
 exit:

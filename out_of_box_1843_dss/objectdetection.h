@@ -49,6 +49,7 @@
 #include <ti/datapath/dpu/rangeproc/rangeprochwa.h>
 #include <ti/datapath/dpc/dpu/staticclutterproc/staticclutterproc.h>
 #include <ti/datapath/dpc/dpu/cfarcaproc/cfarcaprochwa.h>
+#include "dbscan.h"
 
 #if defined(USE_2D_AOA_DPU)
 #include <ti/datapath/dpc/dpu/aoa2dproc/aoa2dprochwa.h>
@@ -271,6 +272,24 @@ typedef struct DPC_ObjectDetection_StaticClutterRemovalCfg_t
 } DPC_ObjectDetection_StaticClutterRemovalCfg;
 
 /**
+ * @brief
+ *  dbScan clustering configuration
+ *
+ * @details
+ *  The structure contains dbScan clustering configuration
+ */
+typedef struct DPC_ObjectDetection_dbScanCfg_t
+{
+    /*! @brief   Subframe number for which this message is applicable. When
+     *           advanced frame is not used, this should be set to
+     *           0 (the 1st and only sub-frame) */
+    uint8_t subFrameNum;
+
+    /*! @brief   Static clutter Removal Cfg */
+    DPU_dbScanCfg cfg;
+} DPC_ObjectDetection_dbScanCfg;
+
+/**
  * @brief Range Bias and rx channel gain/phase measurement configuration.
  *
  */
@@ -447,6 +466,9 @@ typedef struct DPC_ObjectDetection_DynCfg_t
 
     /*! @brief   Static Clutter Removal Cfg */
     DPC_ObjectDetection_StaticClutterRemovalCfg_Base staticClutterRemovalCfg;
+
+    /*! @brief   dbScan clustering algorithm Cfg */
+    DPU_dbScanCfg dbScanCfg;
 } DPC_ObjectDetection_DynCfg;
 
 /*
@@ -703,6 +725,11 @@ typedef struct DPC_ObjectDetection_ExecuteResultExportedInfo_t
 #define DPC_OBJDET_IOCTL__DYNAMIC_EXT_MAX_VELOCITY                        (DPM_CMD_DPC_START_INDEX + 13U)
 
 /**
+ * @brief Command associated with @ref DPC_ObjectDetection_extMaxVelCfg_t
+ */
+#define DPC_OBJDET_IOCTL__DYNAMIC_DBSCAN                                  (DPM_CMD_DPC_START_INDEX + 14U)
+
+/**
  * @brief This commands indicates to the DPC that the results DPC provided to the application
  *        through its execute API (which application will access through DPM_execute API)
  *        have been exported/consumed. The purpose of this command is for DPC to
@@ -734,14 +761,14 @@ typedef struct DPC_ObjectDetection_ExecuteResultExportedInfo_t
  *        An informational structure @ref DPC_ObjectDetection_ExecuteResultExportedInfo_t
  *        is associated with this command.
  */
-#define DPC_OBJDET_IOCTL__DYNAMIC_EXECUTE_RESULT_EXPORTED                     (DPM_CMD_DPC_START_INDEX + 14U)
+#define DPC_OBJDET_IOCTL__DYNAMIC_EXECUTE_RESULT_EXPORTED                     (DPM_CMD_DPC_START_INDEX + 15U)
 
 /**
  * @brief This command is for non real-time (without RF) testing. When issued, it will simulate
  *        the trigger of frame start. No configuration structure is associated with this command.
  *        Must be issued between start and stop of DPC.
  */
-#define DPC_OBJDET_IOCTL__TRIGGER_FRAME                                   (DPM_CMD_DPC_START_INDEX + 15U)
+#define DPC_OBJDET_IOCTL__TRIGGER_FRAME                                   (DPM_CMD_DPC_START_INDEX + 16U)
 /**
 @}
 */

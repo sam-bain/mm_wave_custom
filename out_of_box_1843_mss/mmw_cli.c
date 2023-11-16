@@ -66,8 +66,7 @@
 
 #include "mmw_config.h"
 #include "mmw_mss.h"
-
-#include "../out_of_box_1843_dss/custom_type_defs.h"
+#include "dbscan.h"
 
 /**************************************************************************
  *************************** Local function prototype****************************
@@ -1366,7 +1365,7 @@ static int32_t MmwDemo_CLIDBScanCfg (int32_t argc, char* argv[])
     DPU_dbScanCfg cfg;
     int8_t              subFrameNum;
 
-    if(MmwDemo_CLIGetSubframe(argc, argv, 4, &subFrameNum) < 0)
+    if(MmwDemo_CLIGetSubframe(argc, argv, 7, &subFrameNum) < 0)
     {
         return -1;
     }
@@ -1375,13 +1374,15 @@ static int32_t MmwDemo_CLIDBScanCfg (int32_t argc, char* argv[])
     memset ((void *)&cfg, 0, sizeof(cfg));
 
     /* Populate configuration: */
-    cfg.enabled                     = (uint8_t) atoi (argv[2]);
-    cfg.epsilon                     = (float) atof (argv[3]);
-    cfg.min_points                  = (uint8_t) atof (argv[4]);
+    cfg.enabled                       = (uint8_t) atoi (argv[2]);
+    cfg.min_points                    = (uint8_t) atof (argv[3]);
+    cfg.epsilon                       = (float) atof (argv[4]);
+    cfg.override_intensity            = (int16_t) atof (argv[5]);
+    cfg.override_distance             = (int16_t) atof (argv[6]);
 
     // /* Save Configuration to use later */
-    // MmwDemo_CfgUpdate((void *)&cfg, MMWDEMO_MULTIOBJBEAMFORMING_OFFSET,
-    //                   sizeof(cfg), subFrameNum);
+    MmwDemo_CfgUpdate((void *)&cfg, MMWDEMO_DBSCAN_OFFSET,
+                      sizeof(cfg), subFrameNum);
 
     CLI_write("dbScan clustering has been configured\n");
 
@@ -1543,7 +1544,7 @@ void MmwDemo_CLIInit (uint8_t taskPriority)
     cnt++;
 
     cliCfg.tableEntry[cnt].cmd            = "dbScanCfg";
-    cliCfg.tableEntry[cnt].helpString    = "<enabled> <epsilon> <min_points>";
+    cliCfg.tableEntry[cnt].helpString    = "<subFrameIdx> <enabled> <min_points> <epsilon> <override_intensity> <override_intensity>";
     cliCfg.tableEntry[cnt].cmdHandlerFxn  = MmwDemo_CLIDBScanCfg;
     cnt++;
 

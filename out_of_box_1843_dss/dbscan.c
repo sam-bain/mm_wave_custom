@@ -43,18 +43,14 @@ int expand(
     uint8_t cluster_id,
     point_t *points,
     uint8_t num_points,
-    float epsilon,
-    uint8_t minpts,
-    int16_t override_intensity,
-    int16_t override_distance);
+    DPU_dbScanCfg dbScanCfg);
 int spread(
     uint8_t index,
     epsilon_neighbours_t *seeds,
     uint8_t cluster_id,
     point_t *points,
     uint8_t num_points,
-    float epsilon,
-    uint8_t minpts);
+    DPU_dbScanCfg dbScanCfg);
 float euclidean_dist(point_t *a, point_t *b);
 float adjacent_intensity_dist(point_t *a, point_t *b);
 // uint8_t parse_input(
@@ -163,16 +159,13 @@ void destroy_epsilon_neighbours(epsilon_neighbours_t *en)
 void dbscan(
     point_t *points,
     uint8_t num_points,
-    float epsilon,
-    uint8_t minpts,
-    int16_t override_intensity,
-    int16_t override_distance)
+    DPU_dbScanCfg dbScanCfg)
 {
     uint8_t i, cluster_id = 0;
     for (i = 0; i < num_points; ++i) {
         if (points[i].cluster_id == UNCLASSIFIED) {
             if (expand(i, cluster_id, points,
-                       num_points, epsilon, minpts, override_intensity, override_distance) == CORE_POINT)
+                       num_points, dbScanCfg) == CORE_POINT)
                 ++cluster_id;
         }
     }
@@ -183,25 +176,22 @@ int expand(
     uint8_t cluster_id,
     point_t *points,
     uint8_t num_points,
-    float epsilon,
-    uint8_t minpts,
-    int16_t override_intensity,
-    int16_t override_distance)
+    DPU_dbScanCfg dbScanCfg)
 {
     int return_value = NOT_CORE_POINT;
     epsilon_neighbours_t *seeds =
         get_epsilon_neighbours(index, points,
-                               num_points, epsilon);
+                               num_points, dbScanCfg.epsilon);
     if (seeds == NULL)
         return FAILURE;
 
-    if (seeds->num_members < minpts) {
+    if (seeds->num_members < dbScanCfg.min_points) {
         point_t origin = {0, 0, 0, UNCLASSIFIED};
         float range = euclidean_dist(&origin, &points[index]);
         
-        if (points[index].snr > override_intensity) { //High intensity override
+        if (points[index].snr > dbScanCfg.override_intensity) { //High intensity override
             points[index].cluster_id = ISOLATED_PEAK;
-        } else if (range > override_distance) { //Long distance override
+        } else if (range > dbScanCfg.override_distance) { //Long distance override
             points[index].cluster_id = LONG_DISTANCE;
         } else {
             points[index].cluster_id = NOISE;
@@ -217,7 +207,7 @@ int expand(
         h = seeds->head;
         while (h) {
             spread(h->index, seeds, cluster_id, points,
-                   num_points, epsilon, minpts);
+                   num_points, dbScanCfg);
             h = h->next;
         }
 
@@ -233,15 +223,14 @@ int spread(
     uint8_t cluster_id,
     point_t *points,
     uint8_t num_points,
-    float epsilon,
-    uint8_t minpts)
+    DPU_dbScanCfg dbScanCfg)
 {
     epsilon_neighbours_t *spread =
         get_epsilon_neighbours(index, points,
-                       num_points, epsilon);
+                       num_points, dbScanCfg.epsilon);
     if (spread == NULL)
         return FAILURE;
-    if (spread->num_members >= minpts) {
+    if (spread->num_members >= dbScanCfg.min_points) {
         node_t *n = spread->head;
         point_t *d;
         while (n) {

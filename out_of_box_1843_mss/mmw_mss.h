@@ -109,6 +109,9 @@ extern "C" {
 
 #define MMWDEMO_STATICCLUTTERREMOFVAL_OFFSET     (MMWDEMO_SUBFRAME_DYNCFG_OFFSET + \
                                                   offsetof(DPC_ObjectDetection_DynCfg, staticClutterRemovalCfg))
+
+#define MMWDEMO_DBSCAN_OFFSET                    (MMWDEMO_SUBFRAME_DYNCFG_OFFSET + \
+                                                  offsetof(DPC_ObjectDetection_DynCfg, dbScanCfg))
 /** @}*/ /* configStoreOffsets */
 
 /**

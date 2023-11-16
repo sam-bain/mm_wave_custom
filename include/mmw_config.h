@@ -230,6 +230,10 @@ typedef struct MmwDemo_DPC_ObjDet_DynCfg_t
      *         pending issuance to DPC */
     uint16_t isExtMaxVelCfgPending : 1;
 
+    /*! @brief Flag indicating if new dbScan configuration is
+     *         pending issuance to DPC */
+    uint16_t isDbScanCfgPending : 1;
+
     /*! @brief dynamic config */
     DPC_ObjectDetection_DynCfg   dynCfg;
 } MmwDemo_DPC_ObjDet_DynCfg;
