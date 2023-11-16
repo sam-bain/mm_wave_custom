@@ -3814,28 +3814,6 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     taskParams.stackSize = 4*1024;
     gMmwMssMCB.taskHandles.objDetDpmTask = Task_create(mmwDemo_mssDPMTask, &taskParams, NULL);
 
-    /*****************************************************************************
-     * Launch the CAN 1Hz node status task
-     *****************************************************************************/
-    Task_Params_init(&taskParams);
-    taskParams.priority  = CAN_1HZ_TASK_PRIORITY;
-    taskParams.stackSize = 3*1024;
-    gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_CAN1HzTask, &taskParams, NULL);
-    /*****************************************************************************
-     * Launch the CAN transmit task
-     *****************************************************************************/
-    Task_Params_init(&taskParams);
-    taskParams.priority  = CAN_TRANSMIT_TASK_PRIORITY;
-    taskParams.stackSize = 3*1024;
-    gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_CANTransmitTask, &taskParams, NULL);
-    /*****************************************************************************
-     * Launch the CAN recieve task
-     *****************************************************************************/
-    Task_Params_init(&taskParams);
-    taskParams.priority  = CAN_RECEIVE_TASK_PRIORITY;
-    taskParams.stackSize = 3*1024;
-    gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_CANReceiveTask, &taskParams, NULL);
-
     /* Calibration save/restore initialization */
     if(MmwDemo_calibInit()<0)
     {
@@ -3869,6 +3847,28 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     }
     
     Canard_Initialize(sensor_orientation);
+
+    /*****************************************************************************
+     * Launch the CAN 1Hz node status task
+     *****************************************************************************/
+    Task_Params_init(&taskParams);
+    taskParams.priority  = CAN_1HZ_TASK_PRIORITY;
+    taskParams.stackSize = 3*1024;
+    gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_CAN1HzTask, &taskParams, NULL);
+    /*****************************************************************************
+     * Launch the CAN transmit task
+     *****************************************************************************/
+    Task_Params_init(&taskParams);
+    taskParams.priority  = CAN_TRANSMIT_TASK_PRIORITY;
+    taskParams.stackSize = 3*1024;
+    gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_CANTransmitTask, &taskParams, NULL);
+    /*****************************************************************************
+     * Launch the CAN recieve task
+     *****************************************************************************/
+    Task_Params_init(&taskParams);
+    taskParams.priority  = CAN_RECEIVE_TASK_PRIORITY;
+    taskParams.stackSize = 3*1024;
+    gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_CANReceiveTask, &taskParams, NULL);
 
     return;
 }
