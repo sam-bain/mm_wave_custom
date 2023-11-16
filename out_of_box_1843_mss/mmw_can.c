@@ -136,6 +136,9 @@ uint32_t            txDataLength, rxDataLength;
 CANFD_MCANFrameType frameType = CANFD_MCANFrameType_CLASSIC;
 // CANFD_MCANFrameType frameType = CANFD_MCANFrameType_FD;
 
+/*! @brief   Semaphore handle to signal CAN message is waiting in receive buffer. */
+Semaphore_Handle            CANReceiveSemHandle;
+
 static void MCANAppInitParams(CANFD_MCANInitParams *mcanCfgParams);
 
 CANFD_Handle       canHandle;
@@ -283,7 +286,7 @@ void Can_Initialize(SOC_Handle socHandle)
 
     rxMsgObjHandle = CANFD_createMsgObject(canHandle, &rxMsgObjectParams, &errCode);
 
-
+    CANReceiveSemHandle = Semaphore_create(0, NULL, NULL); //Creates counting semaphore that starts at 0.
 }
 
 void Canard_Initialize(uint8_t sensor_orientation) {
@@ -350,6 +353,7 @@ static void MCANAppCallback(CANFD_MsgObjHandle handle, CANFD_Reason reason)
         {
             gRxPkts++;
             gRxDoneFlag = 1;
+            Semaphore_post(CANReceiveSemHandle);
             return;
         }
     }
@@ -754,11 +758,10 @@ void CAN_processTx(void)
         Task_sleep(2);
     }
 }
+        
 
 void CAN_processRx(void)
 {
-    uint32_t num_pkts;
-    uint32_t pkt_index;
 
     int32_t             errCode, retVal;
     uint32_t            id;
@@ -767,12 +770,8 @@ void CAN_processRx(void)
 
     CanardCANFrame rx_frame;
 
-    // MMWave_osalMutexLock(mutexHandle, 10); 
-    num_pkts = gRxPkts;
-    gRxPkts = 0;
-    // MMWave_osalMutexUnlock(mutexHandle);
-
-    for (pkt_index = 0; pkt_index < num_pkts; pkt_index++) {
+    while (1) {
+        Semaphore_pend(CANReceiveSemHandle, BIOS_WAIT_FOREVER); //Task will read until there are no messages left in the buffer, then sleep
         /* Reset the receive buffer */
         memset(&rxData, 0, sizeof(rxData));
         dataLength = 0;

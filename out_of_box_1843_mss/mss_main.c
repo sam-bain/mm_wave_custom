@@ -659,6 +659,8 @@
 #define MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY      4
 #define MMWDEMO_MMWAVE_CTRL_TASK_PRIORITY         5
 #define CAN_1HZ_TASK_PRIORITY                     3
+#define CAN_TRANSMIT_TASK_PRIORITY                3
+#define CAN_RECEIVE_TASK_PRIORITY                 3
 
 #if (MMWDEMO_CLI_TASK_PRIORITY >= MMWDEMO_DPC_OBJDET_DPM_TASK_PRIORITY)
 #error CLI task priority must be < Object Detection DPM task priority
@@ -1163,6 +1165,8 @@ void get_sensor_orientation()
     
 }
 
+/*! @brief Task to complete CAN 1Hz functions
+*/
 static void MmwDemo_CAN1HzTask(UArg arg0, UArg arg1)
 {
 
@@ -1170,6 +1174,31 @@ static void MmwDemo_CAN1HzTask(UArg arg0, UArg arg1)
     {
         CAN_process1HzTasks();
         Task_sleep(1000); //Sleep for a second
+    }
+}
+
+/*! @brief Task to transmit CAN messages in Canard queue, checks every 10ms for new messages
+*/
+static void MmwDemo_CANTransmitTask(UArg arg0, UArg arg1)
+{
+
+    while (1)
+    {   
+        CAN_processTx();
+        Task_sleep(10); //Sleep for 10 ms
+    }
+}
+
+/*! @brief Task to receive message from CAN buffer and process them the required messages in CANARD. 
+    Blocks on semaphore internally when no messages are left in the buffer. Semaphore is enumerated by
+    hardware interrupt.
+*/
+static void MmwDemo_CANReceiveTask(UArg arg0, UArg arg1)
+{
+    while (1)
+    {
+        //Waits for hardware interrupt on CANRX to post to semaphore 
+        CAN_processRx();
     }
 }
 
@@ -1263,9 +1292,6 @@ static void MmwDemo_transmitProcessedOutput
 
     CAN_writeObjData(objOut, objOutSideInfo, result->numObjOut, sensor_orientation); 
     
-    CAN_processRx();
-    CAN_processTx();
-
 }
 
 /**************************************************************************
@@ -3795,6 +3821,20 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     taskParams.priority  = CAN_1HZ_TASK_PRIORITY;
     taskParams.stackSize = 3*1024;
     gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_CAN1HzTask, &taskParams, NULL);
+    /*****************************************************************************
+     * Launch the CAN transmit task
+     *****************************************************************************/
+    Task_Params_init(&taskParams);
+    taskParams.priority  = CAN_TRANSMIT_TASK_PRIORITY;
+    taskParams.stackSize = 3*1024;
+    gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_CANTransmitTask, &taskParams, NULL);
+    /*****************************************************************************
+     * Launch the CAN recieve task
+     *****************************************************************************/
+    Task_Params_init(&taskParams);
+    taskParams.priority  = CAN_RECEIVE_TASK_PRIORITY;
+    taskParams.stackSize = 3*1024;
+    gMmwMssMCB.taskHandles.mmwaveCtrl = Task_create(MmwDemo_CANReceiveTask, &taskParams, NULL);
 
     /* Calibration save/restore initialization */
     if(MmwDemo_calibInit()<0)
