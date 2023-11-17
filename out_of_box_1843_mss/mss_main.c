@@ -1151,6 +1151,7 @@ void MmwDemo_getTemperatureReport()
 
 void get_sensor_orientation()
 {
+#if USE_ADC_FOR_ORIENTATION
     /*Function that reads from ADC2, and determines the orientation of the sensor based on the value from
     * the ADC. The ADC pin is connected to a voltage divider between a resistor on the radar board and a 
     * resistor on the aircraft carrier board, which is different for each connector.
@@ -1162,7 +1163,20 @@ void get_sensor_orientation()
     } else {
         sensor_orientation = COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_UNDEFINED;
     }
-    
+#else
+    //Hardcoded version based on unique product IDs for testing BOOST evaluation modules on drone
+    rlRfDieIdCfg_t dieID = { 0 }; //Unique device ID which is embedded in each IWR1843 chip
+
+    rlGetRfDieId(RL_DEVICE_MAP_INTERNAL_BSS, &dieID);
+
+    if (dieID.devY == RIGHT_RADAR_UNIQUE_ID) {
+        sensor_orientation = COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_RIGHT;
+    } else if (dieID.devY == LEFT_RADAR_UNIQUE_ID) {
+        sensor_orientation = COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_LEFT;
+    } else {
+        sensor_orientation = COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_UNDEFINED;
+    }
+#endif
 }
 
 /*! @brief Task to complete CAN 1Hz functions
@@ -1290,7 +1304,7 @@ static void MmwDemo_transmitProcessedOutput
         DebugP_assert ((uint32_t) result->radarCube.data!= SOC_TRANSLATEADDR_INVALID);
     }
 
-    CAN_writeObjData(objOut, objOutSideInfo, result->numObjOut, sensor_orientation); 
+    CAN_writeObjData(objOut, objOutSideInfo, result->numObjOut); 
     
 }
 
@@ -3845,8 +3859,10 @@ static void MmwDemo_initTask(UArg arg0, UArg arg1)
     } else {
         CLI_write("Sensor Orientation: Undefined\n");
     }
+
+    CAN_setSensorOrientation(sensor_orientation);
     
-    Canard_Initialize(sensor_orientation);
+    Canard_Initialize();
 
     /*****************************************************************************
      * Launch the CAN 1Hz node status task

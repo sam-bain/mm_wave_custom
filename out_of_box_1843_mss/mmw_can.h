@@ -9,12 +9,21 @@
 
 #define USE_CUSTOM_MESSAGE_TYPE 0 
 
+#define USE_ADC_FOR_ORIENTATION 0
+
+#if !(USE_ADC_FOR_ORIENTATION)
+    #define RIGHT_RADAR_UNIQUE_ID 0x17
+    #define LEFT_RADAR_UNIQUE_ID 0x26
+#endif
+
 void Can_Initialize(SOC_Handle socHandle);
 
-void Canard_Initialize(uint8_t sensor_orientation);
+void CAN_setSensorOrientation(uint8_t orientation);
 
-void CAN_writeCustomObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut, const uint8_t sensor_orientation);
-void CAN_writeStandardObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut, const uint8_t sensor_orientation);
+void Canard_Initialize();
+
+void CAN_writeCustomObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut);
+void CAN_writeStandardObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut);
 
 # if (USE_CUSTOM_MESSAGE_TYPE)
     #define CAN_writeObjData CAN_writeCustomObjData

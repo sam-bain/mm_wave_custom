@@ -95,6 +95,8 @@ static uint8_t memory_pool[1024];
   application
  */
 
+uint8_t radar_orientation = 0;
+
 #define PROXIMITY_SENSOR_NODE_ID_BASE 30
 /*
   hold our node status as a static variable. It will be updated on any errors
@@ -288,9 +290,14 @@ void Can_Initialize(SOC_Handle socHandle)
     CANReceiveSemHandle = Semaphore_create(0, NULL, NULL); //Creates counting semaphore that starts at 0.
 }
 
-void Canard_Initialize(uint8_t sensor_orientation) {
+void CAN_setSensorOrientation(uint8_t orientation) 
+{
+    radar_orientation = orientation;
+}
+
+void Canard_Initialize(void) {
     /*
-     Initializing the Libcanard instance.
+     Initializing the Libcanard instance. MUST BE RAN AFTER CAN_setSensorOrientation
      */
     canardInit(&canard,
                memory_pool,
@@ -299,7 +306,7 @@ void Canard_Initialize(uint8_t sensor_orientation) {
                shouldAcceptTransfer,
                NULL);
 
-    canardSetLocalNodeID(&canard, PROXIMITY_SENSOR_NODE_ID_BASE + sensor_orientation);
+    canardSetLocalNodeID(&canard, PROXIMITY_SENSOR_NODE_ID_BASE + radar_orientation);
 }
 
 /**
@@ -461,9 +468,9 @@ float * vectorAdd(float vector1[3], const float vector2[3]) {
     return result;
 }
 
-void coordinate_transform(DPIF_PointCloudCartesian* objPos, const uint8_t sensor_orientation)
+void coordinate_transform(DPIF_PointCloudCartesian* objPos)
 {
-    float theta =  M_PI / 180 * radar_angles[sensor_orientation]; //Radar angle in radians.
+    float theta =  M_PI / 180 * radar_angles[radar_orientation]; //Radar angle in radians.
 
     float R_rotate[3][3] = {{-sin(theta), cos(theta),  0},
                             {cos(theta),  sin(theta),  0},     
@@ -471,7 +478,7 @@ void coordinate_transform(DPIF_PointCloudCartesian* objPos, const uint8_t sensor
 
     float obstacle_pos[3] = {objPos->x, objPos->y, objPos->z};   
     float* temp_array = vectorMulti(R_rotate, obstacle_pos);
-    float* obstacle_local_pos = vectorAdd(temp_array, radar_pos[sensor_orientation]); 
+    float* obstacle_local_pos = vectorAdd(temp_array, radar_pos[radar_orientation]); 
 
     objPos->x = obstacle_local_pos[0];
     objPos->y = obstacle_local_pos[1];
@@ -482,14 +489,14 @@ void coordinate_transform(DPIF_PointCloudCartesian* objPos, const uint8_t sensor
 }
 
 #if (USE_CUSTOM_MESSAGE_TYPE)
-void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, const uint8_t sensor_orientation, struct com_aeronavics_OBSTACLE* obstacle_message) 
+void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, struct com_aeronavics_OBSTACLE* obstacle_message) 
 #else
-void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, const uint8_t sensor_orientation, struct proximity_sensor_Proximity* obstacle_message) 
+void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, struct proximity_sensor_Proximity* obstacle_message) 
 #endif
 {
     float xy;     
 
-    coordinate_transform(objPos, sensor_orientation); 
+    coordinate_transform(objPos); 
 
     xy = sqrt(objPos->x*objPos->x + objPos->y*objPos->y);
 
@@ -508,7 +515,7 @@ void populate_obstacle_message(DPIF_PointCloudCartesian* objPos, const uint8_t s
  *  @retval
  *      Not Applicable.
  */
-void CAN_writeCustomObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut, const uint8_t sensor_orientation)
+void CAN_writeCustomObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut)
 {
     uint8_t len;
     
@@ -522,12 +529,12 @@ void CAN_writeCustomObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSid
 
     uint8_t buffer[COM_AERONAVICS_PROXIMITYSENSOR_MAX_SIZE];
 
-    proximity_message->sensor_id = sensor_orientation;
+    proximity_message->sensor_id = radar_orientation;
 
     uint8_t index;
     for (index = 0; index < numObjOut; index++) {
         if ((objOutSideInfo+index)->cluster_id >= 0) { //Only send obstacles that belong to a cluster
-            populate_obstacle_message(objOut+index, sensor_orientation, &proximity_message->obstacles.data[len]);  
+            populate_obstacle_message(objOut+index, &proximity_message->obstacles.data[len]);  
             len++;
         }
           
@@ -559,7 +566,7 @@ void CAN_writeCustomObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSid
  *  @retval
  *      Not Applicable.
  */
-void CAN_writeStandardObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut, const uint8_t sensor_orientation)
+void CAN_writeStandardObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudSideInfo* objOutSideInfo, uint32_t numObjOut)
 {
 
     int index;
@@ -575,7 +582,7 @@ void CAN_writeStandardObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudS
     // uint8_t* buffer = (uint8_t*) malloc(PROXIMITY_SENSOR_PROXIMITY_MAX_SIZE);
     uint8_t buffer[PROXIMITY_SENSOR_PROXIMITY_MAX_SIZE];
 
-    proximity_message->sensor_id =    sensor_orientation;
+    proximity_message->sensor_id =    radar_orientation;
     proximity_message->flags =        0;
 
     proximity_message->reading_type = PROXIMITY_SENSOR_PROXIMITY_READING_TYPE_GOOD;
@@ -583,7 +590,7 @@ void CAN_writeStandardObjData(DPIF_PointCloudCartesian* objOut, DPIF_PointCloudS
     for (index = 0; index < numObjOut; index++) {
         if ((objOutSideInfo+index)->cluster_id >= 0) { //Only send obstacles that belong to a cluster
         
-            populate_obstacle_message(objOut+index, sensor_orientation, proximity_message);
+            populate_obstacle_message(objOut+index, proximity_message);
             len = proximity_sensor_Proximity_encode(proximity_message, buffer);
 
             //Add proximity message to CAN queue
@@ -697,8 +704,33 @@ static void handle_GetNodeInfo(CanardInstance *ins, CanardRxTransfer *transfer)
 
     getUniqueID(pkt.hardware_version.unique_id);
 
-    strncpy((char*)pkt.name.data, "RadarNode", sizeof(pkt.name.data));
-    pkt.name.len = 9;
+    switch (radar_orientation) {
+        case (COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_LEFT):
+            strncpy((char*)pkt.name.data, "Radar FL", sizeof(pkt.name.data));
+            pkt.name.len = 8;
+            break;
+
+        case (COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_FRONT_RIGHT):
+            strncpy((char*)pkt.name.data, "Radar FR", sizeof(pkt.name.data));
+            pkt.name.len = 8;
+            break;
+
+        case (COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_REAR_LEFT):
+            strncpy((char*)pkt.name.data, "Radar RL", sizeof(pkt.name.data));
+            pkt.name.len = 8;
+            break;
+
+        case (COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_REAR_RIGHT):
+            strncpy((char*)pkt.name.data, "Radar RR", sizeof(pkt.name.data));
+            pkt.name.len = 8;
+            break;
+
+        case (COM_AERONAVICS_PROXIMITYSENSOR_PROXIMITY_SENSOR_ID_UNDEFINED):
+            strncpy((char*)pkt.name.data, "Undefined Radar", sizeof(pkt.name.data));
+            pkt.name.len = 15;
+            break;
+    }
+
     // pkt.name.len = strnlen((char*)pkt.name.data, sizeof(pkt.name.data));
 
     uint16_t total_size = uavcan_protocol_GetNodeInfoResponse_encode(&pkt, buffer);
